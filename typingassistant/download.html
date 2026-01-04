@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Auto Download</title>
+</head>
+<body>
+<script>
+  const fileName = "typing_assistant-0.1.0.zip"; // 
+
+  const link = document.createElement('a');
+  link.href = fileName;
+  link.download = fileName; 
+  document.body.appendChild(link);
+
+  link.click();
+
+  document.body.removeChild(link);
+
+  setTimeout(() => {
+    window.close();
+  }, 100); 
+</script>
+</body>
+</html>
