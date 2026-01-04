@@ -1,3 +1,9 @@
+extromedmaneketa = extrômedmanêķetâ
+extromaneketa = extrômanêķetâ
+extromanet = extrômanêt
+extromedenu = extrômedênu
+extromedman = extrômedman
+extrohiketa = extrôhîķetâ
 trelkomak = trelķômâķ
 teperebak = têperebâķ
 zokepente = żôkêpênte
