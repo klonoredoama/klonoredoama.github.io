@@ -10,6 +10,7 @@
       --secondary: #666666;
       --bg: #ffffff;
       --card-bg: #f9f9f9;
+      --accent: #007bff;
     }
 
     body { 
@@ -85,11 +86,24 @@
 
     button:hover { opacity: 0.8; }
 
-    /* Documentation Section */
     .section { margin-top: 40px; border-top: 1px solid #eee; padding-top: 40px; }
-    h2 { font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
-    code { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+    h2 { font-size: 1.5rem; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+    h3 { font-size: 1.2rem; color: #333; margin-top: 25px; }
     
+    ul { padding-left: 20px; }
+    li { margin-bottom: 10px; }
+    
+    .config-item { margin-bottom: 15px; }
+    .config-key { font-weight: bold; font-family: monospace; color: var(--accent); }
+    
+    .warning-box {
+      background-color: #fff3cd;
+      border-left: 5px solid #ffecb5;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+
     @media (max-width: 600px) {
       .download-grid { grid-template-columns: 1fr; }
     }
@@ -99,49 +113,70 @@
 
   <header>
     <h1>TypingAssistant v0.1.1</h1>
-    <p class="tagline">Automated system-wide accented character replacement.</p>
+    <p class="tagline">System-wide accented character replacement.</p>
   </header>
 
   <div class="download-grid">
     <div class="card recommended">
       <div class="badge">Recommended</div>
       <h3>Standard Installer</h3>
-      <p>The easiest way to use TypingAssistant. Downloads the latest version and sets up automatic background updates via <code>updater.exe</code>.</p>
+      <p>Interactive setup. Choose your install path, toggle desktop shortcuts, and enjoy automatic background updates.</p>
       <button onclick="handleDownload('installer.exe')">Download Installer</button>
     </div>
 
     <div class="card">
       <h3>Portable (.zip)</h3>
-      <p>Standalone files for advanced users. No installation required. Note: Does not support automatic updates.</p>
+      <p>Standalone files. No installation or registry changes. Perfect for USB drives or restricted environments.</p>
       <button class="secondary-btn" onclick="handleDownload('typing_assistant-0.1.1.zip')">Download ZIP</button>
     </div>
   </div>
 
   <div class="section">
-    <h2>Getting Started</h2>
-    <p>1. <strong>Installation:</strong> Run the installer to set up the app in your local <code>AppData</code> folder.</p>
-    <p>2. <strong>Usage:</strong> Type any unaccented word and press the <code>insert</code> key to replace it with the accented version.</p>
-    <p>3. <strong>Configuration:</strong> Custom settings like trigger keys and delays are managed in <code>config.json</code>.</p>
+    <h2>How to Use (Standard Installer)</h2>
+    <ul>
+      <li><strong>Download and run</strong> the <code>installer.exe</code>.</li>
+      <li><strong>The installer will automatically fetch</strong> the necessary files and create a Desktop Shortcut for you.</li>
+      <li><strong>Run the app</strong> from the shortcut; this will open a new console window.</li>
+      <li><strong>Once running</strong>, you may minimize the window; it will continue running system-wide.</li>
+      <li><strong>Type any word unaccented</strong> and press the <strong>[insert]</strong> key (or your configured <code>accept_key</code>) to replace it with the accented word.</li>
+      <li><strong>Updates are automatic</strong>: Every time you launch the app, it checks for updates and installs them using the included <code>updater.exe</code>.</li>
+    </ul>
+
+    <h2>How to Use (Portable / No-Install)</h2>
+    <ul>
+      <li><strong>Download and extract</strong> the <code>.zip</code> file to a folder of your choice.</li>
+      <li><strong>Run the <code>typing_assistant.exe</code></strong> file; this will open a new console window.</li>
+      <li><strong>Once running</strong>, you may minimize the window; it will continue running system-wide.</li>
+      <li><strong>Type any word unaccented</strong> and press the <strong>[insert]</strong> key (or your configured <code>accept_key</code>) to replace it with the accented word.</li>
+    </ul>
+    <p><em><strong>Note:</strong> This version does not support automatic updates; you must download the new .zip manually to update.</em></p>
+
+    <h2>Editing Settings</h2>
+    <p>You can edit settings using the <code>config.json</code> file found in the application folder. Just open it, change the values, and save it to customize:</p>
+    
+    <div class="config-item">
+      <span class="config-key">accept_key:</span> Change the trigger key (default is <code>insert</code>).
+    </div>
+    <div class="config-item">
+      <span class="config-key">delays:</span> Adjust how fast the app deletes and types characters.
+    </div>
+    <div class="config-item">
+      <span class="config-key">logging:</span> Turn the <code>app.log</code> file on or off.
+    </div>
+
+    <div class="warning-box">
+      <strong>Notes:</strong> Please note that this app is still in its early stages. Ensure that <code>config.json</code> remains in the same folder as the <code>.exe</code> file for the app to function correctly.
+    </div>
   </div>
 
   <script>
-    let downloadInitiated = false;
-
     function handleDownload(fileName) {
       const link = document.createElement('a');
       link.href = fileName;
       link.download = fileName;
       document.body.appendChild(link);
-      
-      downloadInitiated = true;
       link.click();
       document.body.removeChild(link);
-
-      setTimeout(() => {
-        window.addEventListener('focus', () => {
-          window.close();
-        }, { once: true });
-      }, 500);
     }
   </script>
 </body>
