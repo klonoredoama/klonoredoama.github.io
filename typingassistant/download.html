@@ -2,28 +2,83 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Auto Download</title>
+  <title>Download TypingAssistant</title>
+  <style>
+    body { 
+      background-color: white;
+      color: black;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: black;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    button:hover {
+      background-color: #333;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
 </head>
 <body>
-<script>
-  const fileName = "typing_assistant-0.1.1.zip"; 
 
-  const downloadFile = () => {
-    const link = document.createElement('a');
-    link.href = fileName;
-    link.download = fileName; 
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  <h1>TypingAssistant 0.1.1</h1>
+  <button id="downloadBtn">Download File</button>
 
-    setTimeout(() => {
+  <script>
+    const fileName = "typing_assistant-0.1.1.zip";
+    const btn = document.getElementById('downloadBtn');
+    let downloadInitiated = false;
+
+    const closeTab = () => {
       window.close();
-      
-      document.body.innerHTML = "<h1>Download started. You can now close this tab.</h1>";
-    }, 500); 
-  };
+      btn.innerText = "Download Started (You can close this tab)";
+      btn.disabled = true;
+    };
 
-  window.onload = downloadFile;
-</script>
+    window.addEventListener('blur', () => {
+      if (downloadInitiated) {
+        window.addEventListener('focus', closeTab, { once: true });
+      }
+    });
+
+    btn.addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.href = fileName;
+      link.download = fileName;
+      document.body.appendChild(link);
+      
+      downloadInitiated = true;
+      link.click();
+      
+      document.body.removeChild(link);
+
+      setTimeout(() => {
+        closeTab();
+      }, 5000);
+    });
+  </script>
 </body>
 </html>
