@@ -70,6 +70,7 @@ lela = lêla
 onle = onlê
 roka = rôķa
 zalo = žâlo
+nogu = nôgu
 ete = êtê
 gel = ģel
 gre = grê
