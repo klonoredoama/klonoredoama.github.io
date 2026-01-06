@@ -101,3 +101,4 @@ ke = ķê
 ko = ķô 
 no = nô 
 ro = rô
+te = tê
