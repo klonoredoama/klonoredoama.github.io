@@ -1,1726 +1,247 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>êde dictionary</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>êde Dictionary</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            line-height: 1.6;
-            color: black;
-            background: white;
-            position: relative;
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --ipa-color: #64748b;
         }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
         
-        h1 {
-            text-align: center;
-            border-bottom: 2px solid #ccc;
-            padding-bottom: 10px;
-            margin-right: 40px;
+        .controls { 
+            background: white; padding: 20px; border-radius: 12px; 
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); 
+            position: sticky; top: 20px; z-index: 100;
+            display: grid; grid-template-columns: 2fr 1fr; gap: 15px;
+            margin-bottom: 30px;
         }
-        
-        /* ========== MORE BUTTON ========== */
-        .more-button {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #0066cc;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            z-index: 2001;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            transition: background 0.2s;
+
+        input, select { 
+            padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem;
         }
-        
-        .more-button:hover {
-            background: #0055aa;
+
+        .letter-header { 
+            font-size: 1.5rem; font-weight: 800; color: var(--primary); 
+            padding: 20px 0 10px 10px; border-bottom: 2px solid #e2e8f0; margin-top: 20px;
         }
+
+        .dictionary-list { display: grid; gap: 10px; margin-top: 10px; }
         
-        /* ========== MORE POPUP ========== */
-        .more-popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2002;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.3s ease;
+        .entry { 
+            background: white; padding: 16px; border-radius: 10px; 
+            display: flex; align-items: baseline; gap: 15px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
+        .word-box { min-width: 180px; }
+        .word { font-weight: 700; font-size: 1.1rem; color: #0f172a; display: block; }
+        .ipa { font-size: 0.9rem; color: var(--ipa-color); font-family: 'Charis SIL', serif; }
         
-        .more-popup {
-            background: white;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            animation: slideUp 0.3s ease;
-            min-width: 200px;
-            text-align: center;
+        .pos { 
+            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+            background: #eff6ff; color: var(--primary); 
+            padding: 2px 8px; border-radius: 4px; white-space: nowrap;
         }
-        
-        .more-popup h2 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: #0066cc;
-        }
-        
-        .more-popup-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .more-popup-btn {
-            padding: 12px 20px;
-            background: #f0f7ff;
-            color: #0066cc;
-            border: 2px solid #0066cc;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            transition: all 0.2s;
-            text-decoration: none;
-            text-align: center;
-        }
-        
-        .more-popup-btn:hover {
-            background: #0066cc;
-            color: white;
-        }
-        
-        .popup-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .popup-close:hover {
-            background: #f0f0f0;
-        }
-        
-        .word-entry {
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-            margin-right: 40px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        
-        .word-entry:hover {
-            background-color: #f9f9f9;
-        }
-        
-        .word-header {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .ipa {
-            color: #666;
-            font-family: monospace;
-            margin-left: 10px;
-        }
-        
-        .pos {
-            display: inline-block;
-            background: #f0f0f0;
-            padding: 2px 8px;
-            border-radius: 3px;
-            font-size: 0.9em;
-            margin-left: 10px;
-        }
-        
-        .definition {
-            margin: 8px 0;
-        }
-        
-        .letter-heading {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #333;
-            margin-top: 20px;
-            padding-top: 10px;
-            border-top: 2px solid #ccc;
-            margin-right: 40px;
-        }
-        
-        /* ========== STICKY VERTICAL LETTER NAV ========== */
-        .letter-nav-vertical {
-            position: fixed;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 10px 5px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        
-        .letter-nav-vertical a {
-            display: block;
-            text-align: center;
-            text-decoration: none;
-            color: #0066cc;
-            font-weight: bold;
-            padding: 3px 8px;
-            margin: 2px 0;
-            border-radius: 3px;
-            font-size: 0.9em;
-            min-width: 20px;
-        }
-        
-        .letter-nav-vertical a:hover {
-            background: #f0f7ff;
-            text-decoration: none;
-        }
-        
-        .letter-nav-vertical a.active-letter {
-            background: #0066cc;
-            color: white;
-        }
-        
-        /* Filter controls */
-        .filter-controls {
-            text-align: center;
-            margin: 20px 0;
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            margin-right: 40px;
-        }
-        
-        .filter-group {
-            display: inline-block;
-            margin: 0 10px;
-            vertical-align: top;
-        }
-        
-        .filter-label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #555;
-            font-size: 0.9em;
-        }
-        
-        .filter-select {
-            padding: 8px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
-            min-width: 150px;
-        }
-        
-        .filter-checkbox {
-            margin-right: 5px;
-        }
-        
-        .checkbox-group {
-            margin-top: 5px;
-            text-align: left;
-        }
-        
-        .checkbox-label {
-            font-size: 0.9em;
-            margin-right: 15px;
-            white-space: nowrap;
-        }
-        
-        #searchBox {
-            padding: 10px;
-            width: 80%;
-            font-size: 16px;
-            margin: 10px auto;
-            display: block;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-        }
-        
-        .word-count {
-            text-align: center;
-            color: #666;
-            font-size: 0.9em;
-            margin-top: 10px;
-            margin-right: 40px;
-        }
-        
-        .export-btn {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-right: 40px;
-        }
-        
-        .export-btn:hover {
-            background: #45a049;
-        }
-        
-        .search-info {
-            text-align: center;
-            color: #666;
-            font-size: 0.9em;
-            margin-top: 10px;
-            font-style: italic;
-            margin-right: 40px;
-        }
-        
-        .hidden {
-            display: none !important;
-        }
-        
-        /* ========== WORD POPUP MODAL ========== */
-        .word-popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 2000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .word-popup {
-            background: white;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            animation: slideUp 0.3s ease;
-            position: relative;
-        }
-        
-        .popup-header {
-            background: linear-gradient(135deg, #0066cc, #0099cc);
-            color: white;
-            padding: 20px;
-            border-radius: 12px 12px 0 0;
-            position: relative;
-        }
-        
-        .popup-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            font-size: 1.5em;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-        }
-        
-        .popup-close:hover {
-            background: rgba(255,255,255,0.3);
-        }
-        
-        .popup-word {
-            font-size: 2em;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .popup-ipa {
-            font-family: monospace;
-            font-size: 1.2em;
-            opacity: 0.9;
-            margin-bottom: 5px;
-        }
-        
-        .popup-pos {
-            display: inline-block;
-            background: rgba(255,255,255,0.2);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.9em;
-        }
-        
-        .popup-content {
-            padding: 25px;
-        }
-        
-        .popup-section {
-            margin-bottom: 20px;
-        }
-        
-        .popup-section-title {
-            font-weight: bold;
-            color: #0066cc;
-            margin-bottom: 8px;
-            font-size: 1.1em;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 5px;
-        }
-        
-        .popup-definition {
-            line-height: 1.6;
-            font-size: 1.05em;
-        }
-        
-        .popup-synonyms {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        
-        .synonym-tag {
-            background: #f0f7ff;
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 0.9em;
-            color: #0066cc;
-        }
-        
-        .popup-actions {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            padding: 15px;
-            border-top: 1px solid #eee;
-            background: #f9f9f9;
-            border-radius: 0 0 12px 12px;
-        }
-        
-        .popup-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-        }
-        
-        .share-btn {
-            background: #4CAF50;
-            color: white;
-        }
-        
-        .share-btn:hover {
-            background: #45a049;
-        }
-        
-        .camera-btn {
-            background: #2196F3;
-            color: white;
-        }
-        
-        .camera-btn:hover {
-            background: #0b7dda;
-        }
-        
-        .copy-btn {
-            background: #FF9800;
-            color: white;
-        }
-        
-        .copy-btn:hover {
-            background: #e68900;
-        }
-        
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes slideUp {
-            from { 
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @media (max-width: 900px) {
-            body {
-                max-width: 90%;
-            }
-            
-            .letter-nav-vertical {
-                position: relative;
-                right: auto;
-                top: auto;
-                transform: none;
-                flex-direction: row;
-                justify-content: center;
-                flex-wrap: wrap;
-                max-height: none;
-                margin: 20px auto;
-                width: 90%;
-                padding: 10px;
-            }
-            
-            .letter-nav-vertical a {
-                margin: 0 5px;
-            }
-            
-            h1, .word-entry, .letter-heading, .filter-controls, 
-            .word-count, .export-btn, .search-info {
-                margin-right: 0;
-            }
-            
-            .more-button {
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                padding: 8px 15px;
-                font-size: 14px;
-            }
-            
-            .popup-actions {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .popup-btn {
-                width: 90%;
-                justify-content: center;
-            }
-        }
-        
-        @media (max-width: 600px) {
-            .word-popup {
-                width: 95%;
-            }
-            
-            .popup-word {
-                font-size: 1.7em;
-            }
-            
-            .more-popup {
-                width: 90%;
-                padding: 20px;
-            }
+        .meaning { color: #475569; flex: 1; }
+        .stats { grid-column: span 2; font-size: 0.85rem; color: #64748b; }
+
+        @media (max-width: 700px) {
+            .controls { grid-template-columns: 1fr; }
+            .entry { flex-direction: column; gap: 6px; }
+            .word-box { min-width: auto; }
         }
     </style>
 </head>
 <body>
-    <!-- More Button -->
-    <button class="more-button" id="moreButton">More</button>
-    
-    <!-- More Popup -->
-    <div id="morePopupContainer"></div>
-    
-    <h1>êdôâma dâ enêoķe</h1>
-    
-    <!-- Word popup will be inserted here -->
-    <div id="wordPopupContainer"></div>
-    
-    <!-- New Vocabulary Entries -->
-<div class="word-entry" data-word="extrômanêķetâ" data-pos="noun" data-definition="(n) a toe">
-    <div class="word-header">
-        extrômanêķetâ <span class="ipa">/ɛks.’tru:.mæn.i:.sɛt.eɪ/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n) a toe</div>
-</div>
-
-<div class="word-entry" data-word="extrôman" data-pos="noun" data-definition="(n) a foot">
-    <div class="word-header">
-        extrôman <span class="ipa">/ɛks.’tru:.mæn/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n) a foot</div>
-</div>
-
-<div class="word-entry" data-word="extrômedênu" data-pos="noun" data-definition="(n) an arm">
-    <div class="word-header">
-        extrômedênu <span class="ipa">/ɛks.’tru:.mɛd.i:.nʌ/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n) an arm</div>
-</div>
-
-<div class="word-entry" data-word="extrômedman" data-pos="noun" data-definition="(n) a hand">
-    <div class="word-header">
-        extrômedman <span class="ipa">/ɛks.’tru:.mɛd.mæn/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n) a hand</div>
-</div>
-
-<div class="word-entry" data-word="extrômedmanêķetâ" data-pos="noun" data-definition="(n) a finger">
-    <div class="word-header">
-        extrômedmanêķetâ <span class="ipa">/ɛks.’tru:.mɛd.mæn.i:.sɛt.eɪ/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n) a finger</div>
-</div>
-
-<div class="word-entry" data-word="extrôhîķetâ" data-pos="noun" data-definition="(n) head">
-    <div class="word-header">
-        extrôhîķetâ <span class="ipa">/ɛks.’tru:.haɪ.sɛ.tâ/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n) head</div>
-</div>
-<div class="word-entry" data-word="man" data-pos="adjective" data-definition="(adj.) low">
-    <div class="word-header">
-        man <span class="ipa">/mæn/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) low</div>
-</div>
-
-<div class="word-entry" data-word="manet" data-pos="adjective" data-definition="(adj.) lower">
-    <div class="word-header">
-        manêt <span class="ipa">/mæn.’i:t/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) lower</div>
-</div>
-
-<div class="word-entry" data-word="maneketa" data-pos="adjective" data-definition="(adj.) lowest">
-    <div class="word-header">
-        manêķetâ <span class="ipa">/mæn.’i:.sɛt.eɪ/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) lowest</div>
-</div>
-
-<div class="word-entry" data-word="hi" data-pos="adjective" data-definition="(adj.) high">
-    <div class="word-header">
-        hî <span class="ipa">/’haɪ/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) high</div>
-</div>
-
-<div class="word-entry" data-word="hit" data-pos="adjective" data-definition="(adj.) higher">
-    <div class="word-header">
-        hît <span class="ipa">/’haɪt/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) higher</div>
-</div>
-
-<div class="word-entry" data-word="hiketa" data-pos="adjective" data-definition="(adj.) highest">
-    <div class="word-header">
-        hîķetâ <span class="ipa">/’haɪ.sɛ.tâ/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) highest</div>
-</div>
-
-<div class="word-entry" data-word="medenu" data-pos="adjective" data-definition="(adj.) middle">
-    <div class="word-header">
-        medênu <span class="ipa">/mɛd.’i:.nʌ/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) middle</div>
-</div>
-<div class="word-entry" data-word="ażôl" data-pos="adjective" data-definition="(adj.) blue">
-    <div class="word-header">
-        ażôl <span class="ipa">/æʃ.’u:l/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) blue</div>
-</div>
-    <div class="word-entry" data-word="adeķ" data-pos="preposition" data-definition="(preposition) here">
-    <div class="word-header">
-        âdeķ <span class="ipa">/’eɪ.dɛs/</span> <span class="pos">preposition</span>
-    </div>
-    <div class="definition">(preposition) here</div>
-</div>
-
-<div class="word-entry" data-word="alên" data-pos="adjective" data-definition="(adj.) third person neutral possessive">
-    <div class="word-header">
-        âlên <span class="ipa">/'eɪ.liːn/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) third person neutral possessive</div>
-</div>
-
-<div class="word-entry" data-word="alêr" data-pos="pronoun" data-definition="(pro.) Third person neutral">
-    <div class="word-header">
-        âlêr <span class="ipa">/'eɪ.ǀiːr/</span> <span class="pos">pro.</span>
-    </div>
-    <div class="definition">(pro.) Third person neutral</div>
-</div>
-
-<div class="word-entry" data-word="amar" data-pos="adjective" data-definition="(adj.) yellow">
-    <div class="word-header">
-        âmar <span class="ipa">/’eɪ.mær/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) yellow</div>
-</div>
-
-
-
-<div class="word-entry" data-word="blânk" data-pos="adjective" data-definition="(adj.) white">
-    <div class="word-header">
-        blânk <span class="ipa">/bleɪnk/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) white</div>
-</div>
-
-<div class="word-entry" data-word="dâ" data-pos="preposition" data-definition="(prep) of, from, by">
-    <div class="word-header">
-        dâ <span class="ipa">/’deɪ/</span> <span class="pos">prep.</span>
-    </div>
-    <div class="definition">(prep) of, from, by</div>
-</div>
-
-<div class="word-entry" data-word="dêja" data-pos="noun" data-definition="(n) day">
-    <div class="word-header">
-        dêja <span class="ipa">/’di:.jæ/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n) day</div>
-</div>
-
-<div class="word-entry" data-word="dôrmîķ" data-pos="noun" data-definition="(n) a sleep, nap, or rest">
-    <div class="word-header">
-        dôrmîķ <span class="ipa">/’du:r.mi:s/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n) a sleep, nap, or rest</div>
-</div>
-
-<div class="word-entry" data-word="dôrmîķâķ" data-pos="verb" data-definition="(v) to sleep, nap, or rest">
-    <div class="word-header">
-        dôrmîķâķ <span class="ipa">/’du:r.mi:.seɪs/</span> <span class="pos">v.</span>
-    </div>
-    <div class="definition">(v) to sleep, nap, or rest</div>
-</div>
-
-<div class="word-entry" data-word="dôrmîķân" data-pos="adjective" data-definition="(adj.) asleep, napping, resting, dormant">
-    <div class="word-header">
-        dôrmîķân <span class="ipa">/’du:r.mi:.seɪn/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) asleep, napping, resting, dormant</div>
-</div>
-<div class="word-entry" data-word="Enêoķe" data-pos="noun" data-definition="(n.) racoon">
-    <div class="word-header">
-        Enêoķe <span class="ipa">/ɛn.’i:.ɔ.sɛ/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n.) racoon</div>
-</div>
-<div class="word-entry" data-word="epêvolâķ" data-pos="verb" data-definition="(v) to desire or want something">
-    <div class="word-header">
-        epêvolâķ <span class="ipa">/ɛp.’i:.vɔ.leɪs/</span> <span class="pos">v.</span>
-    </div>
-    <div class="definition">(v) to desire or want something</div>
-</div>
-
-<div class="word-entry" data-word="epêvolô" data-pos="noun" data-definition="(n) a desire, wish, or want">
-    <div class="word-header">
-        epêvolô <span class="ipa">/ɛp.’i:.vɔl.u:/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n) a desire, wish, or want</div>
-</div>
-<div class="word-entry" data-word="edôâma" data-pos="noun" data-definition="(n) language">
-    <div class="word-header">
-        êdôâma <span class="ipa">/’i:.du:.eɪ.mæ/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n) language</div>
-</div>
-
-<div class="word-entry" data-word="eķ" data-pos="verb" data-definition="(v.) Third person helping verb for 'to be'">
-    <div class="word-header">
-        êķ <span class="ipa">/’i:s/</span> <span class="pos">v.</span>
-    </div>
-    <div class="definition">(v.) Third person helping verb for 'to be'</div>
-</div>
-
-<div class="word-entry" data-word="emed" data-pos="adjective" data-definition="(Adj.) Pretty, beautiful, visually pleasing">
-    <div class="word-header">
-        êmed <span class="ipa">/i:.’mɛd/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(Adj.) Pretty, beautiful, visually pleasing</div>
-</div>
-
-<div class="word-entry" data-word="e­nêmo" data-pos="noun" data-definition="(n) mystery, enigma">
-    <div class="word-header">
-        ê­nêmo <span class="ipa">/’i:.ni:.mɔ/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n) mystery, enigma</div>
-</div>
-
-<div class="word-entry" data-word="e­nêmoķ" data-pos="adjective" data-definition="(adj) mysterious, enigmatic">
-    <div class="word-header">
-        ê­nêmoķ <span class="ipa">/’i:.ni:.mɔs/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj) mysterious, enigmatic</div>
-</div>
-
-
-
-<div class="word-entry" data-word="entêon" data-pos="noun" data-definition="(n) intent, willingness, eagerness, purpose">
-    <div class="word-header">
-        êntêon <span class="ipa">/’i:n.ti:.ɔn/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n) intent, willingness, eagerness, purpose</div>
-</div>
-
-<div class="word-entry" data-word="entêonân" data-pos="adverb" data-definition="(adv) with the intent of">
-    <div class="word-header">
-        êntêonân <span class="ipa">/’i:n.ti:.ɔn.eɪn/</span> <span class="pos">adv.</span>
-    </div>
-    <div class="definition">(adv) with the intent of</div>
-</div>
-
-
-<div class="word-entry" data-word="eroķ" data-pos="verb" data-definition="(v.) Second-person helping verb for 'to be'">
-    <div class="word-header">
-        êroķ <span class="ipa">/’i:r.ɔs/</span> <span class="pos">v.</span>
-    </div>
-    <div class="definition">(v.) Second-person helping verb for 'to be'</div>
-</div>
-
-<div class="word-entry" data-word="e­tê" data-pos="preposition" data-definition="(prep.) this, that, those">
-    <div class="word-header">
-        ê­tê <span class="ipa">/’i:.ti:/</span> <span class="pos">prep.</span>
-    </div>
-    <div class="definition">(prep.) this, that, those</div>
-</div>
-
-<div class="word-entry" data-word="Fôkażhog" data-pos="adjective" data-definition="(adj.) Good">
-    <div class="word-header">
-        Fôkażhog <span class="ipa">/’fu:k.æs.hɔg/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) Good</div>
-</div>
-
-<div class="word-entry" data-word="fovôr" data-pos="noun" data-definition="(n.) favor for, appreciation">
-    <div class="word-header">
-        fovôr <span class="ipa">/fɔ.’vu:r/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n.) favor for, appreciation</div>
-</div>
-
-<div class="word-entry" data-word="fovôrâķ" data-pos="verb" data-definition="(v.) to hold favor with, to appreciate, to like">
-    <div class="word-header">
-        fovôrâķ <span class="ipa">/fɔ.’vu:r.eɪs/</span> <span class="pos">v.</span>
-    </div>
-    <div class="definition">(v.) to hold favor with, to appreciate, to like</div>
-</div>
-
-<div class="word-entry" data-word="framînt" data-pos="noun" data-definition="(n.) friend">
-    <div class="word-header">
-        framînt <span class="ipa">/’fræ.maɪnt/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n.) friend</div>
-</div>
-<div class="word-entry" data-word="grê" data-pos="adjective" data-definition="(adj.) gray">
-    <div class="word-header">
-        grê <span class="ipa">/.gri:/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) gray</div>
-</div>
-<div class="word-entry" data-word="gel" data-pos="adjective" data-definition="(adj.) masculine">
-    <div class="word-header">
-        Ģel <span class="ipa">/dʒel/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) masculine</div>
-</div>
-
-<div class="word-entry" data-word="gelên" data-pos="adjective" data-definition="(Adj.) Third person masculine possessive">
-    <div class="word-header">
-        Ģelên <span class="ipa">/dʒɛl.ˈiːn/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(Adj.) Third person masculine possessive</div>
-</div>
-
-<div class="word-entry" data-word="gelêr" data-pos="pronoun" data-definition="(pro.) Third-person masculine">
-    <div class="word-header">
-        Ģelêr <span class="ipa">/dʒɛ.’li:ɹ/</span> <span class="pos">pro.</span>
-    </div>
-    <div class="definition">(pro.) Third-person masculine</div>
-</div>
-
-<div class="word-entry" data-word="gelvên" data-pos="noun" data-definition="(n.) a man">
-    <div class="word-header">
-        ģelvên <span class="ipa">/dʒɛl.’vi:n/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n.) a man</div>
-</div>
-
-
-
-<div class="word-entry" data-word="hog" data-pos="noun" data-definition="(n.) hedgehog">
-    <div class="word-header">
-        hog <span class="ipa">/’hɔg/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n.) hedgehog</div>
-</div>
-
-<div class="word-entry" data-word="jânep" data-pos="adjective" data-definition="(adj.) full">
-    <div class="word-header">
-        jânep <span class="ipa">/’jeɪ.nɛp/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) full</div>
-</div>
-
-<div class="word-entry" data-word="jo" data-pos="pronoun" data-definition="(pro.) First-person singular pronoun">
-    <div class="word-header">
-        jo <span class="ipa">/’jɔ/</span> <span class="pos">pro.</span>
-    </div>
-    <div class="definition">(pro.) First-person singular pronoun</div>
-</div>
-
-<div class="word-entry" data-word="joķ" data-pos="pronoun" data-definition="(pro.) First-person plural pronoun">
-    <div class="word-header">
-        joķ <span class="ipa">/’jɔs/</span> <span class="pos">pro.</span>
-    </div>
-    <div class="definition">(pro.) First-person plural pronoun</div>
-</div>
-
-<div class="word-entry" data-word="jon" data-pos="adjective" data-definition="(Adj.) First person possessive">
-    <div class="word-header">
-        jon <span class="ipa">/’jɔn/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(Adj.) First person possessive</div>
-</div>
-
-<div class="word-entry" data-word="jot" data-pos="pronoun" data-definition="(pro.) Second-person singular pronoun">
-    <div class="word-header">
-        jot <span class="ipa">/’jɔt/</span> <span class="pos">pro.</span>
-    </div>
-    <div class="definition">(pro.) Second-person singular pronoun</div>
-</div>
-
-<div class="word-entry" data-word="joteķ" data-pos="pronoun" data-definition="(pro.) Second-person plural pronoun">
-    <div class="word-header">
-        joteķ <span class="ipa">/jɔt.’ɛs/</span> <span class="pos">pro.</span>
-    </div>
-    <div class="definition">(pro.) Second-person plural pronoun</div>
-</div>
-
-<div class="word-entry" data-word="joten" data-pos="adjective" data-definition="(Adj) Second person possessive">
-    <div class="word-header">
-        joten <span class="ipa">/ˈjɔtɛn/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(Adj) Second person possessive</div>
-</div>
-<div class="word-entry" data-word="kôpâ" data-pos="noun" data-definition="(n.) a cup, an object that one drinks from">
-    <div class="word-header">
-        kôpâ <span class="ipa">/’ku:.pɛ/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n.) a cup, an object that one drinks from</div>
-</div>
-
-<div class="word-entry" data-word="krêdan" data-pos="noun" data-definition="(n.) creation, something artificial">
-    <div class="word-header">
-        krêdan <span class="ipa">/’kri:.dæn/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n.) creation, something artificial</div>
-</div>
-
-<div class="word-entry" data-word="krêdanâķ" data-pos="verb" data-definition="(v.) to create">
-    <div class="word-header">
-        krêdanâķ <span class="ipa">/’kri:.dæn.eɪs/</span> <span class="pos">v.</span>
-    </div>
-    <div class="definition">(v.) to create</div>
-</div>
-<div class="word-entry" data-word="kaloķâķ" data-pos="verb" data-definition="(v.) to make slippery">
-    <div class="word-header">
-        ǩaloķâķ <span class="ipa">/skæ.lɔ.seɪs/</span> <span class="pos">v.</span>
-    </div>
-    <div class="definition">(v.) to make slippery</div>
-</div>
-
-<div class="word-entry" data-word="kaloķô" data-pos="adjective" data-definition="(adj.) difficult to hold firmly due to wetness or sliminess; slippery">
-    <div class="word-header">
-        ǩaloķô <span class="ipa">/skæ.lɔ.’su:/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) difficult to hold firmly due to wetness or sliminess; slippery</div>
-</div>
-
-<div class="word-entry" data-word="kalôtôn" data-pos="interjection" data-definition="(int.) greeting; hello">
-    <div class="word-header">
-        ķalôtôn <span class="ipa">/sæl.’u:.tu:n/</span> <span class="pos">int.</span>
-    </div>
-    <div class="definition">(int.) greeting; hello</div>
-</div>
-
-<div class="word-entry" data-word="kê" data-pos="determiner/particle/exclamation" data-definition="(determiner, particle, exclamation) Positive, positive answer, yes">
-    <div class="word-header">
-        ķê <span class="ipa">/’si:/</span> <span class="pos">det./part.</span>
-    </div>
-    <div class="definition">(determiner, particle, exclamation) Positive, positive answer, yes</div>
-</div>
-
-<div class="word-entry" data-word="ķexê" data-pos="adjective" data-definition="(adj.) sexually appealing">
-    <div class="word-header">
-        ķexê <span class="ipa">/sɛk.’si:/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) sexually appealing</div>
-</div>
-
-<div class="word-entry" data-word="klônor" data-pos="noun" data-definition="(n.) dictionary">
-    <div class="word-header">
-        ķlônor <span class="ipa">/’slu:.nɔr/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n.) dictionary</div>
-</div>
-
-<div class="word-entry" data-word="kô" data-pos="verb" data-definition="(v.) First-person helping verb for 'to be'">
-    <div class="word-header">
-        ķô <span class="ipa">/’su:/</span> <span class="pos">v.</span>
-    </div>
-    <div class="definition">(v.) First-person helping verb for 'to be'</div>
-</div>
-
-<div class="word-entry" data-word="kog" data-pos="verb" data-definition="(v.) to leave or go">
-    <div class="word-header">
-        ķog <span class="ipa">/sɔg/</span> <span class="pos">v.</span>
-    </div>
-    <div class="definition">(v.) to leave or go</div>
-</div>
-
-
-<div class="word-entry" data-word="lêla" data-pos="adjective" data-definition="(adj.) lilac">
-    <div class="word-header">
-        lêla <span class="ipa">/li:.læ/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) lilac</div>
-</div>
-
-<div class="word-entry" data-word="mârôn" data-pos="adjective" data-definition="(adj.) brown">
-    <div class="word-header">
-        mârôn <span class="ipa">/’meɪ.ru:n/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) brown</div>
-</div>
-
-<div class="word-entry" data-word="mîldo" data-pos="adjective" data-definition="(adj.) cute, adorable">
-    <div class="word-header">
-        mîldo <span class="ipa">/’mi:l.dɔ/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) cute, adorable</div>
-</div>
-
-<div class="word-entry" data-word="nô" data-pos="determiner/adv/adj/particle/exclamation" data-definition="(determiner, adv, adj, particle, exclamation) Negation, not, none, negative answer">
-    <div class="word-header">
-        nô <span class="ipa">/’nu:/</span> <span class="pos">det./adv./adj./part.</span>
-    </div>
-    <div class="definition">(determiner, adv, adj, particle, exclamation) Negation, not, none, negative answer</div>
-</div>
-
-<div class="word-entry" data-word="nôker" data-pos="adjective" data-definition="(adj.) black">
-    <div class="word-header">
-        nôker <span class="ipa">/’nu:.kɛr/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) black</div>
-</div>
-
-<div class="word-entry" data-word="onlê" data-pos="adverb/adjective" data-definition="(adv, adj) only, nothing more">
-    <div class="word-header">
-        onlê <span class="ipa">/ͻn.’li:/</span> <span class="pos">adv./adj.</span>
-    </div>
-    <div class="definition">(adv, adj) only, nothing more</div>
-</div>
-
-<div class="word-entry" data-word="orênģ" data-pos="adjective" data-definition="(adj.) orange">
-    <div class="word-header">
-        orênģ <span class="ipa">/ͻ.’ri:nʤ/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) orange</div>
-</div>
-
-<div class="word-entry" data-word="prôtjont" data-pos="adjective" data-definition="(adj.) creepy, scary">
-    <div class="word-header">
-        prôtjont <span class="ipa">/’pru:t.jɔnt/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) creepy, scary</div>
-</div>
-
-<div class="word-entry" data-word="rô" data-pos="adjective" data-definition="(adj.) red">
-    <div class="word-header">
-        rô <span class="ipa">/’ru:/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) red</div>
-</div>
-
-<div class="word-entry" data-word="rôķa" data-pos="adjective" data-definition="(adj.) pink">
-    <div class="word-header">
-        rôķa <span class="ipa">/’ru:.sæ/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) pink</div>
-</div>
-
-<div class="word-entry" data-word="Têpereb" data-pos="noun" data-definition="(n.) a drink">
-    <div class="word-header">
-        Têpereb <span class="ipa">/’ti:.pɛr.ɛb/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n.) a drink</div>
-</div>
-
-<div class="word-entry" data-word="têperebâķ" data-pos="verb" data-definition="(v.) to drink">
-    <div class="word-header">
-        têperebâķ <span class="ipa">/’ti:.pɛr.ɛb.eɪs/</span> <span class="pos">v.</span>
-    </div>
-    <div class="definition">(v.) to drink</div>
-</div>
-
-<div class="word-entry" data-word="terkwîķ" data-pos="adjective" data-definition="(adj.) turquoise">
-    <div class="word-header">
-        terkwîķ <span class="ipa">/terk.’waɪs/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) turquoise</div>
-</div>
-<div class="word-entry" data-word="trelķôm" data-pos="adjective" data-definition="(adj.) crazy, deranged">
-    <div class="word-header">
-        trelķôm <span class="ipa">/trɛl.’su:m/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) crazy, deranged</div>
-</div>
-
-<div class="word-entry" data-word="trelķômâķ" data-pos="verb" data-definition="(v.) to go insane, to become deranged, to become crazy">
-    <div class="word-header">
-        trelķômâķ <span class="ipa">/trɛl.’su:.meɪs/</span> <span class="pos">v.</span>
-    </div>
-    <div class="definition">(v.) to go insane, to become deranged, to become crazy</div>
-</div>
-
-<div class="word-entry" data-word="unê" data-pos="adjective" data-definition="(adj.) singular, one">
-    <div class="word-header">
-        ûnê <span class="ipa">/’ju:.ni:/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) singular, one</div>
-</div>
-
-<div class="word-entry" data-word="vêlât" data-pos="adjective" data-definition="(adj.) violet">
-    <div class="word-header">
-        vêlât <span class="ipa">/’vi:.leɪt/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) violet</div>
-</div>
-
-<div class="word-entry" data-word="vên" data-pos="noun" data-definition="(n.) a human (gender neutral)">
-    <div class="word-header">
-        vên <span class="ipa">/’vi:n/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n.) a human (gender neutral)</div>
-</div>
-
-<div class="word-entry" data-word="vêrdâ" data-pos="adjective" data-definition="(adj.) green">
-    <div class="word-header">
-        vêrdâ <span class="ipa">/’vi:r.deɪ/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) green</div>
-</div>
-
-<div class="word-entry" data-word="zâlêr" data-pos="pronoun" data-definition="(pro.) Third-person feminine">
-    <div class="word-header">
-        Žâlêr <span class="ipa">/’ʒeɪ.li:ɹ/</span> <span class="pos">pro.</span>
-    </div>
-    <div class="definition">(pro.) Third-person feminine</div>
-</div>
-
-<div class="word-entry" data-word="zâlo" data-pos="adjective" data-definition="(adj.) feminine">
-    <div class="word-header">
-        Žâlo <span class="ipa">/’ʒeɪ.lɔ/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) feminine</div>
-</div>
-
-<div class="word-entry" data-word="zâlon" data-pos="adjective" data-definition="(adj.) Third-person feminine possessive">
-    <div class="word-header">
-        Žâlon <span class="ipa">/ˈʒeɪ.lɔn/</span> <span class="pos">adj.</span>
-    </div>
-    <div class="definition">(adj.) Third-person feminine possessive</div>
-</div>
-
-<div class="word-entry" data-word="zâlovên" data-pos="noun" data-definition="(n.) a woman">
-    <div class="word-header">
-        žâlovên <span class="ipa">/’ʒeɪ.lɔ.vi:n/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n.) a woman</div>
-</div>
-
-<div class="word-entry" data-word="zempênte" data-pos="noun" data-definition="(n.) snake">
-    <div class="word-header">
-        žempênte <span class="ipa">/ʒɛm.’pi:n.tɛ/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n.) snake</div>
-</div>
-
-<div class="word-entry" data-word="zôkêarâķ" data-pos="verb" data-definition="(v.) to suck">
-    <div class="word-header">
-        żôkêarâķ <span class="ipa">/’ʃu:.ki:.ær.eɪs/</span> <span class="pos">v.</span>
-    </div>
-    <div class="definition">(v.) to suck</div>
-</div>
-
-<div class="word-entry" data-word="zôkêpênte" data-pos="noun" data-definition="(n.) Insult meaning snake sucker">
-    <div class="word-header">
-        żôkêpênte <span class="ipa">/’ʃu:.ki:.pi:n.tɛ/</span> <span class="pos">n.</span>
-    </div>
-    <div class="definition">(n.) Insult meaning snake sucker</div>
-</div>
-
-
-    <div class="word-count" id="wordCount"></div>
-    <div class="search-info" id="searchInfo"></div>
-    
-    <script>
-        // ========== MORE POPUP FUNCTIONS ==========
-        
-        function showMorePopup() {
-            const popupHTML = `
-                <div class="more-popup-overlay" id="morePopup">
-                    <div class="more-popup">
-                        <button class="popup-close" id="morePopupCloseBtn">&times;</button>
-                        <h2>More Resources</h2>
-                        <div class="more-popup-buttons">
-                            <a href="index.html" class="more-popup-btn">Coming Soon</a>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Insert popup into container
-            document.getElementById('morePopupContainer').innerHTML = popupHTML;
-            
-            // Add event listeners
-            document.getElementById('morePopupCloseBtn').addEventListener('click', closeMorePopup);
-            document.getElementById('morePopup').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeMorePopup();
-                }
-            });
-            
-            // Prevent body scrolling when popup is open
-            document.body.style.overflow = 'hidden';
-        }
-        
-        function closeMorePopup() {
-            // Remove popup
-            document.getElementById('morePopupContainer').innerHTML = '';
-            
-            // Restore body scrolling
-            document.body.style.overflow = 'auto';
-        }
-        
-        // ========== WORD POPUP FUNCTIONS ==========
-        
-        function showWordPopup(wordEntry) {
-            const word = wordEntry.getAttribute('data-word');
-            const ipa = wordEntry.querySelector('.ipa').textContent;
-            const pos = wordEntry.querySelector('.pos').textContent;
-            const definition = wordEntry.querySelector('.definition').textContent;
-            const synonyms = wordEntry.getAttribute('data-synonyms') || '';
-            
-            // Update URL with word parameter
-            const newUrl = `${window.location.pathname}?word=${encodeURIComponent(word.toLowerCase())}`;
-            window.history.pushState({word: word}, '', newUrl);
-            
-            // Create popup HTML
-            const popupHTML = `
-                <div class="word-popup-overlay" id="wordPopup">
-                    <div class="word-popup">
-                        <div class="popup-header">
-                            <button class="popup-close" id="popupCloseBtn">&times;</button>
-                            <div class="popup-word">${word}</div>
-                            <div class="popup-ipa">${ipa}</div>
-                            <div class="popup-pos">${pos}</div>
-                        </div>
-                        
-                        <div class="popup-content">
-                            <div class="popup-section">
-                                <div class="popup-section-title">Definition</div>
-                                <div class="popup-definition">${definition}</div>
-                            </div>
-                            
-                            ${synonyms ? `
-                            <div class="popup-section">
-                                <div class="popup-section-title">English Synonyms</div>
-                                <div class="popup-synonyms">
-                                    ${synonyms.split(',').map(syn => 
-                                        `<span class="synonym-tag">${syn.trim()}</span>`
-                                    ).join('')}
-                                </div>
-                            </div>
-                            ` : ''}
-                        </div>
-                        
-                        <div class="popup-actions">
-                            <button class="popup-btn share-btn" id="shareBtn">
-                                <span>🔗</span> Share
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Insert popup into container
-            document.getElementById('wordPopupContainer').innerHTML = popupHTML;
-            
-            // Add event listeners for popup buttons
-            document.getElementById('popupCloseBtn').addEventListener('click', closePopup);
-            document.getElementById('shareBtn').addEventListener('click', () => shareWord(word));
-            document.getElementById('cameraBtn').addEventListener('click', () => captureWordPopup(word));
-            document.getElementById('copyBtn').addEventListener('click', () => copyWordDetails(word, ipa, pos, definition, synonyms));
-            
-            // Also close popup when clicking outside
-            document.getElementById('wordPopup').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closePopup();
-                }
-            });
-            
-            // Prevent body scrolling when popup is open
-            document.body.style.overflow = 'hidden';
-        }
-        
-        function closePopup() {
-            // Remove popup
-            document.getElementById('wordPopupContainer').innerHTML = '';
-            
-            // Update URL to remove word parameter
-            const newUrl = window.location.pathname;
-            window.history.pushState({}, '', newUrl);
-            
-            // Restore body scrolling
-            document.body.style.overflow = 'auto';
-        }
-        
-        function shareWord(word) {
-            const url = `${window.location.origin}${window.location.pathname}?word=${encodeURIComponent(word.toLowerCase())}`;
-            const text = `Check out the word "${word}" in the Conlang Dictionary!`;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: `êde Dictionary - ${word}`,
-                    text: text,
-                    url: url,
-                });
-            } else {
-                // Fallback: copy to clipboard
-                navigator.clipboard.writeText(`${text}\n${url}`).then(() => {
-                    alert('Link copied to clipboard!');
-                });
-            }
-        }
-        
-        function captureWordPopup(word) {
-            alert('In a full implementation, this would capture the popup as an image. For now, you can use browser screenshot tools (Ctrl+Shift+S on Windows/Linux, Cmd+Shift+4 on Mac).');
-        }
-        
-        function copyWordDetails(word, ipa, pos, definition, synonyms) {
-            const textToCopy = `
-${word} ${ipa}
-Part of speech: ${pos}
-
-Definition:
-${definition}
-
-${synonyms ? `Synonyms: ${synonyms}` : ''}
----
-From Conlang Dictionary
-            `.trim();
-            
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                // Show temporary feedback
-                const copyBtn = document.getElementById('copyBtn');
-                const originalText = copyBtn.innerHTML;
-                copyBtn.innerHTML = '<span>✓</span> Copied!';
-                copyBtn.style.background = '#4CAF50';
-                
-                setTimeout(() => {
-                    copyBtn.innerHTML = originalText;
-                    copyBtn.style.background = '';
-                }, 2000);
-            });
-        }
-        
-        // Check URL for word parameter on page load
-        function checkUrlForWord() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const wordParam = urlParams.get('word');
-            
-            if (wordParam) {
-                // Find the word entry and show its popup
-                const wordEntry = document.querySelector(`.word-entry[data-word="${wordParam.toLowerCase()}"]`);
-                if (wordEntry) {
-                    // Small delay to ensure page is loaded
-                    setTimeout(() => showWordPopup(wordEntry), 100);
-                }
-            }
-        }
-        
-        // ========== EXISTING FUNCTIONS ==========
-        
-        function addVerticalLetterNav() {
-            // First, get all words and their first letters
-            const words = Array.from(document.querySelectorAll('.word-entry')).map(entry => 
-                entry.getAttribute('data-word').toUpperCase()
-            );
-            
-            // Get unique first letters that actually have words
-            const lettersWithWords = new Set();
-            words.forEach(word => {
-                if (word && word.length > 0) {
-                    lettersWithWords.add(word.charAt(0));
-                }
-            });
-            
-            // Sort letters alphabetically
-            const sortedLetters = Array.from(lettersWithWords).sort();
-            
-            // Create navigation HTML
-            const navHTML = sortedLetters.map(letter => 
-                `<a href="#letter-${letter}" title="Jump to ${letter}" class="letter-link">${letter}</a>`
-            ).join('');
-            
-            const navContainer = `
-                <div class="letter-nav-vertical" id="verticalLetterNav">
-                    ${navHTML}
-                </div>
-            `;
-            
-            document.body.insertAdjacentHTML('afterbegin', navContainer);
-            
-            window.addEventListener('scroll', highlightCurrentLetter);
-        }
-        
-        function highlightCurrentLetter() {
-            const letterLinks = document.querySelectorAll('.letter-nav-vertical a');
-            const headings = document.querySelectorAll('.letter-heading');
-            let currentLetter = '';
-            
-            for (let heading of headings) {
-                const rect = heading.getBoundingClientRect();
-                if (rect.top <= 100 && rect.bottom >= 100) {
-                    currentLetter = heading.textContent;
-                    break;
-                }
-            }
-            
-            letterLinks.forEach(link => {
-                if (link.textContent === currentLetter) {
-                    link.classList.add('active-letter');
-                } else {
-                    link.classList.remove('active-letter');
-                }
-            });
-        }
-        
-        function addFilterControls() {
-            const filterHTML = `
-                <div class="filter-controls">
-                    <div class="filter-group">
-                        <div class="filter-label">Search Type:</div>
-                        <select id="searchType" class="filter-select">
-                            <option value="all" selected>All Fields</option>
-                            <option value="word">Conlang Word</option>
-                            <option value="definition">Definition</option>
-                            <option value="synonyms">English Synonyms</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <div class="filter-label">Part of Speech:</div>
-                        <select id="posFilter" class="filter-select">
-                            <option value="all" selected>All Parts</option>
-                            <option value="adjective">Adjectives</option>
-                            <option value="noun">Nouns</option>
-                            <option value="pronoun">Pronouns</option>
-                            <option value="preposition">Prepositions</option>
-                            <option value="verb">Verbs</option>
-                            <option value="prefix">Prefixes</option>
-                            <option value="suffix">Suffixes</option>
-                            <option value="adverb">Adverbs</option>
-                            <option value="operator">Operators</option>
-                            <option value="particle">Particles</option>
-                        </select>
-                    </div>
-
 
-                    
-                    <div class="filter-group">
-                        <div class="filter-label">Search:</div>
-                        <input type="text" id="searchBox" placeholder="Type to search all fields..." 
-                               style="padding: 8px; width: 200px; border: 2px solid #ccc; border-radius: 5px;">
-                    </div>
-                    
-                    <div class="filter-group">
-                        <div class="filter-label">Options:</div>
-                        <div class="checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="hideEmptyLetters" class="filter-checkbox" checked>
-                                Hide empty letters
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="showCounts" class="filter-checkbox" checked>
-                                Show counts
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div style="clear: both; margin-top: 10px;">
-                        <button id="resetFilters" style="padding: 8px 15px; background: #666; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                            Reset All Filters
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            document.querySelector('h1').insertAdjacentHTML('afterend', filterHTML);
-            
-            document.getElementById('searchBox').addEventListener('input', applyFilters);
-            document.getElementById('searchType').addEventListener('change', applyFilters);
-            document.getElementById('posFilter').addEventListener('change', applyFilters);
-            document.getElementById('hideEmptyLetters').addEventListener('change', applyFilters);
-            document.getElementById('showCounts').addEventListener('change', updateSearchInfo);
-            document.getElementById('resetFilters').addEventListener('click', resetFilters);
-        }
-        
-        function applyFilters() {
-            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
-            const searchType = document.getElementById('searchType').value;
-            const posFilter = document.getElementById('posFilter').value;
-            const hideEmptyLetters = document.getElementById('hideEmptyLetters').checked;
-            
-            const allEntries = document.querySelectorAll('.word-entry');
-            const allHeadings = document.querySelectorAll('.letter-heading');
-            
-            let visibleCount = 0;
-            
-            allEntries.forEach(entry => {
-                const word = entry.getAttribute('data-word').toLowerCase();
-                const definition = entry.getAttribute('data-definition')?.toLowerCase() || '';
-                const synonyms = entry.getAttribute('data-synonyms')?.toLowerCase() || '';
-                const posString = entry.getAttribute('data-pos')?.toLowerCase() || '';
-                const posArray = posString.split(',').map(p => p.trim());
-                
-                let posMatch = false;
-                if (posFilter === 'all') {
-                    posMatch = true;
-                } else {
-                    posMatch = posArray.includes(posFilter);
-                }
-                
-                let searchMatch = false;
-                if (searchTerm === '') {
-                    searchMatch = true;
-                } else {
-                    switch(searchType) {
-                        case 'word':
-                            searchMatch = word.includes(searchTerm);
-                            break;
-                        case 'definition':
-                            searchMatch = definition.includes(searchTerm);
-                            break;
-                        case 'synonyms':
-                            searchMatch = synonyms.includes(searchTerm);
-                            break;
-                        case 'all':
-                            searchMatch = word.includes(searchTerm) || 
-                                         definition.includes(searchTerm) || 
-                                         synonyms.includes(searchTerm);
-                            break;
-                    }
-                }
-                
-                if (posMatch && searchMatch) {
-                    entry.style.display = 'block';
-                    visibleCount++;
-                } else {
-                    entry.style.display = 'none';
-                }
-            });
-            
-            allHeadings.forEach(heading => {
-                const letter = heading.textContent.toLowerCase();
-                const hasVisibleEntries = Array.from(allEntries).some(entry => {
-                    return entry.style.display !== 'none' && 
-                           entry.getAttribute('data-word').toLowerCase().startsWith(letter);
-                });
-                
-                if (hideEmptyLetters && !hasVisibleEntries) {
-                    heading.style.display = 'none';
-                } else {
-                    heading.style.display = 'block';
-                }
-            });
-            
-            updateSearchInfo(visibleCount);
-            highlightCurrentLetter();
-        }
-        
-        function updateSearchInfo(visibleCount = null) {
-            const searchInfo = document.getElementById('searchInfo');
-            const totalCount = document.querySelectorAll('.word-entry').length;
-            const showCounts = document.getElementById('showCounts').checked;
-            
-            if (visibleCount === null) {
-                visibleCount = document.querySelectorAll('.word-entry[style*="display: block"]').length;
-            }
-            
-            if (showCounts) {
-                if (visibleCount === totalCount) {
-                    searchInfo.textContent = `Showing all ${totalCount} words`;
-                } else {
-                    searchInfo.textContent = `Showing ${visibleCount} of ${totalCount} words`;
-                }
-            } else {
-                searchInfo.textContent = '';
-            }
-        }
-        
-        function resetFilters() {
-            document.getElementById('searchBox').value = '';
-            document.getElementById('searchType').selectedIndex = 0;
-            document.getElementById('posFilter').selectedIndex = 0;
-            document.getElementById('hideEmptyLetters').checked = true;
-            document.getElementById('showCounts').checked = true;
-            applyFilters();
-        }
-        
-        function exportDictionary() {
-            const entries = Array.from(document.querySelectorAll('.word-entry')).map(entry => ({
-                word: entry.getAttribute('data-word'),
-                ipa: entry.querySelector('.ipa').textContent,
-                pos: entry.querySelector('.pos').textContent,
-                definition: entry.querySelector('.definition').textContent,
-                synonyms: entry.getAttribute('data-synonyms') || ''
-            }));
-            
-            const dataStr = JSON.stringify(entries, null, 2);
-            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-            
-            const link = document.createElement('a');
-            link.href = dataUri;
-            link.download = 'conlang-dictionary.json';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-        
-        function sortDictionary() {
-            const container = document.body;
-            const entries = Array.from(document.querySelectorAll('.word-entry'));
-            
-            // Remove all word entries and letter headings
-            entries.forEach(entry => {
-                if (entry.parentNode === container) {
-                    container.removeChild(entry);
-                }
-            });
-            
-            const headings = document.querySelectorAll('.letter-heading');
-            headings.forEach(heading => {
-                if (heading.parentNode === container) {
-                    container.removeChild(heading);
-                }
-            });
-            
-            // Sort entries alphabetically
-            entries.sort((a, b) => {
-                const wordA = a.getAttribute('data-word').toLowerCase();
-                const wordB = b.getAttribute('data-word').toLowerCase();
-                return wordA.localeCompare(wordB);
-            });
-            
-            let currentLetter = '';
-            entries.forEach(entry => {
-                const word = entry.getAttribute('data-word');
-                const firstLetter = word.charAt(0).toUpperCase();
-                
-                if (firstLetter !== currentLetter) {
-                    currentLetter = firstLetter;
-                    const heading = document.createElement('div');
-                    heading.className = 'letter-heading';
-                    heading.id = `letter-${currentLetter}`;
-                    heading.textContent = currentLetter;
-                    container.appendChild(heading);
-                }
-                
-                container.appendChild(entry);
-            });
-            
-            updateWordCount();
-            updateSearchInfo();
-        }
-        
-        function updateWordCount() {
-            const count = document.querySelectorAll('.word-entry').length;
-            document.getElementById('wordCount').textContent = `Total words in dictionary: ${count}`;
-            document.title = `Conlang Dictionary (${count} words)`;
-        }
-        
-        // ========== INITIALIZATION ==========
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add event listener to More button
-            document.getElementById('moreButton').addEventListener('click', showMorePopup);
-            
-            addVerticalLetterNav();
-            addFilterControls();
-            sortDictionary();
-            
-            // Add click handlers to word entries
-            document.querySelectorAll('.word-entry').forEach(entry => {
-                entry.addEventListener('click', () => showWordPopup(entry));
-            });
-            
-            // Check URL for word parameter
-            checkUrlForWord();
-            
-            // Handle browser back/forward buttons
-            window.addEventListener('popstate', function(event) {
-                checkUrlForWord();
-            });
-            
-            const exportBtn = document.createElement('button');
-            exportBtn.className = 'export-btn';
-            exportBtn.textContent = 'Export Dictionary as JSON';
-            exportBtn.onclick = exportDictionary;
-            
-            const wordCount = document.getElementById('wordCount');
-            wordCount.parentNode.insertBefore(exportBtn, wordCount.nextSibling);
-            
-            const dateElement = document.createElement('div');
-            dateElement.style.textAlign = 'center';
-            dateElement.style.color = '#666';
-            dateElement.style.fontSize = '0.9em';
-            dateElement.style.marginTop = '20px';
-            dateElement.textContent = `Last updated: ${new Date().toLocaleDateString()}`;
-            document.body.appendChild(dateElement);
-            
-            applyFilters();
+<div class="container">
+    <header><h1>êde Lexicon</h1></header>
+
+    <div class="controls">
+        <input type="text" id="searchInput" placeholder="Search word, IPA, or definition...">
+        <select id="posFilter">
+            <option value="all">All Parts of Speech</option>
+        </select>
+        <div class="stats" id="stats">Total Words: 0</div>
+    </div>
+
+    <div id="dictionaryDisplay"></div>
+</div>
+
+<script>
+    const dictionaryData = {
+        "âdeķ": { "ipa": "/’eɪ.dɛs/", "pos": "prep", "meaning": "here" },
+        "âlên": { "ipa": "/'eɪ.liːn/", "pos": "adj", "meaning": "third person neutral possessive" },
+        "âlêr": { "ipa": "/'eɪ.ǀiːr/", "pos": "pro", "meaning": "third person neutral" },
+        "âmar": { "ipa": "/’eɪ.mær/", "pos": "adj", "meaning": "yellow" },
+        "ażôl": { "ipa": "/æʃ.’u:l/", "pos": "adj", "meaning": "blue" },
+        "blânk": { "ipa": "/bleɪnk/", "pos": "adj", "meaning": "white" },
+        "dâ": { "ipa": "/’deɪ/", "pos": "prep", "meaning": "of, from, by" },
+        "dêja": { "ipa": "/’di:.jæ/", "pos": "n", "meaning": "day" },
+        "dôrmîķ": { "ipa": "/’du:r.mi:s/", "pos": "n", "meaning": "a sleep, nap, or rest" },
+        "dôrmîķâķ": { "ipa": "/’du:r.mi:.seɪs/", "pos": "v", "meaning": "to sleep, nap, or rest" },
+        "dôrmîķân": { "ipa": "/’du:r.mi:.seɪn/", "pos": "adj", "meaning": "asleep, napping, resting, dormant" },
+        "êdôâma": { "ipa": "/’i:.du:.eɪ.mæ/", "pos": "n", "meaning": "language" },
+        "êķ": { "ipa": "/’i:s/", "pos": "v", "meaning": "third person helping verb for 'to be'" },
+        "êmed": { "ipa": "/i:.’mɛd/", "pos": "adj", "meaning": "pretty, beautiful, visually pleasing" },
+        "ê­nêmo": { "ipa": "/’i:.ni:.mɔ/", "pos": "n", "meaning": "mystery, enigma" },
+        "ê­nêmoķ": { "ipa": "/’i:.ni:.mɔs/", "pos": "adj", "meaning": "mysterious, enigmatic" },
+        "Enêoķe": { "ipa": "/ɛn.’i:.ɔ.sɛ/", "pos": "n", "meaning": "raccoon" },
+        "êntêon": { "ipa": "/’i:n.ti:.ɔn/", "pos": "n", "meaning": "intent, willingness, eagerness, purpose" },
+        "êntêonân": { "ipa": "/’i:n.ti:.ɔn.eɪn/", "pos": "adv", "meaning": "with the intent of" },
+        "epêvolâķ": { "ipa": "/ɛp.’i:.vɔ.leɪs/", "pos": "v", "meaning": "to desire or want something" },
+        "epêvolô": { "ipa": "/ɛp.’i:.vɔl.u:/", "pos": "n", "meaning": "a desire, wish, or want" },
+        "êroķ": { "ipa": "/’i:r.ɔs/", "pos": "v", "meaning": "second person helping verb for 'to be'" },
+        "ê­tê": { "ipa": "/’i:.ti:/", "pos": "prep", "meaning": "this, that, those" },
+        "Fôkażhog": { "ipa": "/’fu:k.æs.hɔg/", "pos": "adj", "meaning": "good" },
+        "fovôr": { "ipa": "/fɔ.’vu:r/", "pos": "n", "meaning": "favor for, appreciation" },
+        "fovôrâķ": { "ipa": "/fɔ.’vu:r.eɪs/", "pos": "v", "meaning": "to hold favor with, to appreciate, to like" },
+        "framînt": { "ipa": "/’fræ.maɪnt/", "pos": "n", "meaning": "friend" },
+        "Ģel": { "ipa": "/dʒel/", "pos": "adj", "meaning": "masculine" },
+        "Ģelên": { "ipa": "/dʒɛl.ˈiːn/", "pos": "adj", "meaning": "third person masculine possessive" },
+        "Ģelêr": { "ipa": "/dʒɛ.’li:ɹ/", "pos": "pro", "meaning": "third person masculine" },
+        "ģelvên": { "ipa": "/dʒɛl.’vi:n/", "pos": "n", "meaning": "a man" },
+        "grê": { "ipa": "/.gri:/", "pos": "adj", "meaning": "gray" },
+        "hog": { "ipa": "/’hɔg/", "pos": "n", "meaning": "hedgehog" },
+        "jânep": { "ipa": "/’jeɪ.nɛp/", "pos": "adj", "meaning": "full" },
+        "jo": { "ipa": "/’jɔ/", "pos": "pro", "meaning": "first person singular pronoun" },
+        "joķ": { "ipa": "/’jɔs/", "pos": "pro", "meaning": "first person plural pronoun" },
+        "jon": { "ipa": "/’jɔn/", "pos": "adj", "meaning": "first person possessive" },
+        "jot": { "ipa": "/’jɔt/", "pos": "pro", "meaning": "second person singular pronoun" },
+        "joteķ": { "ipa": "/jɔt.’ɛs/", "pos": "pro", "meaning": "second person plural pronoun" },
+        "joten": { "ipa": "/ˈjɔtɛn/", "pos": "adj", "meaning": "second person possessive" },
+        "ǩaloķâķ": { "ipa": "/skæ.lɔ.seɪs/", "pos": "v", "meaning": "to make slippery" },
+        "ǩaloķô": { "ipa": "/skæ.lɔ.’su:/", "pos": "adj", "meaning": "slippery; difficult to hold firmly due to wetness/sliminess" },
+        "ķalôtôn": { "ipa": "/sæl.’u:.tu:n/", "pos": "int", "meaning": "greeting; hello" },
+        "ķê": { "ipa": "/’si:/", "pos": "particle", "meaning": "yes (positive answer/exclamation)" },
+        "ķexê": { "ipa": "/sɛk.’si:/", "pos": "adj", "meaning": "sexually appealing" },
+        "ķlônor": { "ipa": "/’slu:.nɔr/", "pos": "n", "meaning": "dictionary" },
+        "ķô": { "ipa": "/’su:/", "pos": "v", "meaning": "first person helping verb for 'to be'" },
+        "ķog": { "ipa": "/sɔg/", "pos": "v", "meaning": "to leave or go" },
+        "kôpâ": { "ipa": "/’ku:.pɛ/", "pos": "n", "meaning": "a cup; object one drinks from" },
+        "krêdan": { "ipa": "/’kri:.dæn/", "pos": "n", "meaning": "creation, something artificial" },
+        "krêdanâķ": { "ipa": "/’kri:.dæn.eɪs/", "pos": "v", "meaning": "to create" },
+        "lêla": { "ipa": "/li:.læ/", "pos": "adj", "meaning": "lilac" },
+        "mârôn": { "ipa": "/’meɪ.ru:n/", "pos": "adj", "meaning": "brown" },
+        "mîldo": { "ipa": "/’mi:l.dɔ/", "pos": "adj", "meaning": "cute, adorable" },
+        "nô": { "ipa": "/’nu:/", "pos": "particle", "meaning": "negation, not, none, no" },
+        "nôker": { "ipa": "/’nu:.kɛr/", "pos": "adj", "meaning": "black" },
+        "onlê": { "ipa": "/ͻn.’li:/", "pos": "adv", "meaning": "only, nothing more" },
+        "orênģ": { "ipa": "/ͻ.’ri:nʤ/", "pos": "adj", "meaning": "orange" },
+        "prôtjont": { "ipa": "/’pru:t.jɔnt/", "pos": "adj", "meaning": "creepy, scary" },
+        "rô": { "ipa": "/’ru:/", "pos": "adj", "meaning": "red" },
+        "rôķa": { "ipa": "/’ru:.sæ/", "pos": "adj", "meaning": "pink" },
+        "Têpereb": { "ipa": "/’ti:.pɛr.ɛb/", "pos": "n", "meaning": "a drink" },
+        "têperebâķ": { "ipa": "/’ti:.pɛr.ɛb.eɪs/", "pos": "v", "meaning": "to drink" },
+        "terkwîķ": { "ipa": "/terk.’waɪs/", "pos": "adj", "meaning": "turquoise" },
+        "trelķôm": { "ipa": "/trɛl.’su:m/", "pos": "adj", "meaning": "crazy, deranged" },
+        "trelķômâķ": { "ipa": "/trɛl.’su:.meɪs/", "pos": "v", "meaning": "to go insane, to become deranged" },
+        "ûnê": { "ipa": "/’ju:.ni:/", "pos": "adj", "meaning": "singular, one" },
+        "vêlât": { "ipa": "/’vi:.leɪt/", "pos": "adj", "meaning": "violet" },
+        "vên": { "ipa": "/’vi:n/", "pos": "n", "meaning": "a human (gender neutral)" },
+        "vêrdâ": { "ipa": "/’vi:r.deɪ/", "pos": "adj", "meaning": "green" },
+        "Žâlêr": { "ipa": "/’ʒeɪ.li:ɹ/", "pos": "pro", "meaning": "third person feminine" },
+        "Žâlo": { "ipa": "/’ʒeɪ.lɔ/", "pos": "adj", "meaning": "feminine" },
+        "Žâlon": { "ipa": "/ˈʒeɪ.lɔn/", "pos": "adj", "meaning": "third person feminine possessive" },
+        "žâlovên": { "ipa": "/’ʒeɪ.lɔ.vi:n/", "pos": "n", "meaning": "a woman" },
+        "žempênte": { "ipa": "/ʒɛm.’pi:n.tɛ/", "pos": "n", "meaning": "snake" },
+        "żôkêarâķ": { "ipa": "/’ʃu:.ki:.ær.eɪs/", "pos": "v", "meaning": "to suck" },
+        "żôkêpênte": { "ipa": "/’ʃu:.ki:.pi:n.tɛ/", "pos": "n", "meaning": "snake sucker (insult)" },
+        "extrô": { "ipa": "/ɛks.’tru:/", "pos": "n", "meaning": "a limb" },
+        "extrôman": { "ipa": "/ɛks.’tru:.mæn/", "pos": "n", "meaning": "a foot / legs" },
+        "man": { "ipa": "/mæn/", "pos": "adj", "meaning": "low" },
+        "manêķetâ": { "ipa": "/mæn.’i:.sɛt.eɪ/", "pos": "adj", "meaning": "lowest" },
+        "manêt": { "ipa": "/mæn.’i:t/", "pos": "adj", "meaning": "lower" },
+        "hî": { "ipa": "/’haɪ/", "pos": "adj", "meaning": "high" },
+        "hîķetâ": { "ipa": "/’haɪ.sɛ.tâ/", "pos": "adj", "meaning": "highest" },
+        "hît": { "ipa": "/’haɪt/", "pos": "adj", "meaning": "higher" },
+        "medênu": { "ipa": "/mɛd.’i:.nʌ/", "pos": "adj", "meaning": "middle" },
+        "extrômanêķetâ": { "ipa": "/ɛks.’tru:.mæn.i:.sɛt.eɪ/", "pos": "n", "meaning": "a toe" },
+        "extrômedênu": { "ipa": "/ɛks.’tru:.mɛd.i:.nʌ/", "pos": "n", "meaning": "an arm" },
+        "extrômedman": { "ipa": "/ɛks.’tru:.mɛd.mæn/", "pos": "n", "meaning": "a hand" },
+        "extrômedmanêķetâ": { "ipa": "/ɛks.’tru:.mɛd.mæn.i:.sɛt.eɪ/", "pos": "n", "meaning": "a finger" },
+        "extrôhîķetâ": { "ipa": "/ɛks.’tru:.haɪ.sɛ.tâ/", "pos": "n", "meaning": "head" },
+        "nôgu": { "ipa": "/’nu:.gʌ/", "pos": "adj", "meaning": "multiple, many" },
+        "ķoķâ": { "ipa": "/sɔ.’seɪ/", "pos": "n", "meaning": "cocoa" },
+        "ķlôpu": { "ipa": "/’slu:.pʌ/", "pos": "n", "meaning": "slope" },
+        "ķlôpân": { "ipa": "/’slu:.peɪn/", "pos": "adj", "meaning": "sloped" },
+        "êtor": { "ipa": "/’i:.tʌr/", "pos": "n", "meaning": "rate" },
+        "ģân": { "ipa": "/’dʒeɪn/", "pos": "n", "meaning": "change" },
+        "ģânâķ": { "ipa": "/’dʒeɪn.eɪs/", "pos": "v", "meaning": "to change; to modify" },
+        "tôdâķ": { "ipa": "/’tu:.deɪs/", "pos": "adj", "meaning": "should" },
+        "kronu": { "ipa": "/kræ.nʌ/", "pos": "n", "meaning": "time" },
+        "poķê": { "ipa": "/pɔ.’si:/", "pos": "n", "meaning": "position" },
+        "razôn": { "ipa": "/ræ.’zu:n/", "pos": "n", "meaning": "reason" },
+        "razônâķ": { "ipa": "/ræ.’zu:n.eɪs/", "pos": "v", "meaning": "to reason" }
+    };
+
+    function normalize(str) {
+        return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                  .replace(/ķ/g, 'k').replace(/ż/g, 'z').replace(/ģ/g, 'g').replace(/ž/g, 'z').replace(/ǩ/g, 'k').replace(/â/g, 'a');
+    }
+
+    function init() {
+        const poses = [...new Set(Object.values(dictionaryData).map(e => e.pos))].sort();
+        poses.forEach(pos => {
+            const opt = document.createElement('option');
+            opt.value = pos; opt.textContent = pos;
+            document.getElementById('posFilter').appendChild(opt);
         });
-    </script>
+        render();
+    }
+
+    function render() {
+        const query = normalize(document.getElementById('searchInput').value);
+        const filter = document.getElementById('posFilter').value;
+        const display = document.getElementById('dictionaryDisplay');
+        display.innerHTML = '';
+
+        const keys = Object.keys(dictionaryData).filter(word => {
+            const entry = dictionaryData[word];
+            const matchesSearch = normalize(word).includes(query) || 
+                                 normalize(entry.meaning).includes(query) || 
+                                 entry.ipa.includes(query);
+            const matchesPos = filter === 'all' || entry.pos === filter;
+            return matchesSearch && matchesPos;
+        }).sort((a, b) => normalize(a).localeCompare(normalize(b)));
+
+        document.getElementById('stats').textContent = `Showing ${keys.length} entries`;
+
+        let currentLetter = '';
+        keys.forEach(word => {
+            const normWord = normalize(word);
+            const firstLetter = (normWord.charAt(0) || '?').toUpperCase();
+            
+            if (firstLetter !== currentLetter) {
+                currentLetter = firstLetter;
+                const h = document.createElement('div');
+                h.className = 'letter-header'; h.textContent = currentLetter;
+                display.appendChild(h);
+            }
+
+            const entry = dictionaryData[word];
+            const div = document.createElement('div');
+            div.className = 'entry';
+            div.innerHTML = `
+                <div class="word-box">
+                    <span class="word">${word}</span>
+                    <span class="ipa">${entry.ipa}</span>
+                </div>
+                <span class="pos">${entry.pos}</span>
+                <span class="meaning">${entry.meaning}</span>
+            `;
+            display.appendChild(div);
+        });
+    }
+
+    document.getElementById('searchInput').addEventListener('input', render);
+    document.getElementById('posFilter').addEventListener('change', render);
+    window.onload = init;
+</script>
 </body>
 </html>
