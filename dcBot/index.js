@@ -11,7 +11,7 @@ import {
 } from "discord.js";
 import { JSDOM } from "jsdom";
 
-// --- Web Server for Hosting ---
+// --- Web Server for Render (Prevents Port Timeout) ---
 http.createServer((req, res) => {
   res.write('Bot is alive');
   res.end();
@@ -48,7 +48,7 @@ async function fetchWordDefinition(searchWord) {
     const response = await fetch("https://klonoredoama.github.io/");
     const html = await response.text();
 
-    // Extracts the dictionaryData object directly from the script tag
+    // Extracts the dictionaryData object directly from the website's <script> tag
     const match = html.match(/const\s+dictionaryData\s*=\s*({[\s\S]*?});/);
     if (!match) return null;
 
@@ -100,23 +100,24 @@ const commands = [
         .setDescription("The word to look up")
         .setRequired(true)
     )
-    .setContexts([0, 1, 2]) // Allows Guilds, DMs, and Group DMs
-    .setIntegrationTypes([0, 1]), // Allows Server and User installs
+    .setContexts([0, 1, 2]) // Contexts: Guilds, DMs, Group DMs
+    .setIntegrationTypes([0, 1]), // Install types: Guild (Server) and User
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
 
 (async () => {
   try {
+    // This part registers the command with Discord's API
     await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: commands });
-    console.log("Commands reloaded.");
+    console.log("Slash commands registered successfully.");
   } catch (error) {
-    console.error(error);
+    console.error("Failed to register commands:", error);
   }
 })();
 
 client.once(Events.ClientReady, () => {
-  console.log("Dictionary Bot is Online.");
+  console.log(`Bot Logged in as ${client.user.tag}`);
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
@@ -132,6 +133,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       const embed = new EmbedBuilder()
         .setColor(0x2563eb)
         .setTitle(entry.displayWord)
+        // Combined definition formatting
         .setDescription(`*${entry.pos}*\n**IPA:** ${entry.ipa}\n\n${entry.definition}\n\n**[View Full Dictionary](https://klonoredoama.github.io/)**`);
       
       await interaction.editReply({ embeds: [embed] });
@@ -141,4 +143,5 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 });
 
+// Login using the token from Render Environment Variables
 client.login(process.env.DISCORD_TOKEN);
