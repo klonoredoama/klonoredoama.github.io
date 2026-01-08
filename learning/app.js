@@ -1,4 +1,4 @@
-// app.js - Updated with cookies, progression, levels, sentence builder
+// app.js - FIXED with reliable drag-and-drop, cookies, progression, etc.
 let dictionary = {};
 let lessons = [];
 let currentLesson = null;
@@ -13,6 +13,8 @@ const mascotText = document.getElementById('mascot-text');
 const xpDisplay = document.getElementById('xp-display');
 const levelDisplay = document.getElementById('level-display');
 const statsBar = document.getElementById('stats-bar');
+
+let dragged = null; // Global to track dragged tile
 
 // Helper to escape quotes
 function escapeQuotes(str) {
@@ -37,7 +39,7 @@ function getCookie(name) {
     return null;
 }
 
-// Load progress from cookies
+// Load/save progress
 function loadProgress() {
     const savedXP = getCookie('totalXP');
     const savedCompleted = getCookie('completedLessons');
@@ -146,8 +148,8 @@ function showMultipleChoice(exercise) {
 }
 
 function showSentenceBuilder(exercise) {
-    const correctSentence = exercise.sentence.split(' ');
-    const shuffled = [...correctSentence].sort(() => Math.random() - 0.5);
+    const correctWords = exercise.sentence.split(' ');
+    const shuffled = [...correctWords].sort(() => Math.random() - 0.5);
     mascotText.innerText = `Build the sentence: "${exercise.translation}"`;
 
     mainContent.innerHTML = `
@@ -157,11 +159,12 @@ function showSentenceBuilder(exercise) {
             <div class="word-pool" id="word-pool">
                 ${shuffled.map(word => `<div class="word-tile" draggable="true">${word}</div>`).join('')}
             </div>
-            <button class="btn-primary submit-btn" onclick="checkSentence('${correctSentence.join(' ')}')">Submit</button>
+            <button class="btn-primary submit-btn" id="submit-btn">Submit</button>
         </div>
     `;
 
     setupDragAndDrop();
+    document.getElementById('submit-btn').addEventListener('click', () => checkSentence(exercise.sentence));
 }
 
 function setupDragAndDrop() {
@@ -170,55 +173,50 @@ function setupDragAndDrop() {
     const pool = document.getElementById('word-pool');
 
     tiles.forEach(tile => {
-        tile.addEventListener('dragstart', dragStart);
-        tile.addEventListener('dragend', dragEnd);
+        tile.addEventListener('dragstart', (e) => {
+            dragged = tile;
+            tile.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        });
+        tile.addEventListener('dragend', () => {
+            tile.classList.remove('dragging');
+            dragged = null;
+        });
     });
 
     [builder, pool].forEach(area => {
-        area.addEventListener('dragover', dragOver);
-        area.addEventListener('drop', drop);
+        area.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        });
+
+        area.addEventListener('drop', (e) => {
+            e.preventDefault();
+            if (dragged) {
+                area.appendChild(dragged);
+            }
+        });
     });
-}
-
-function dragStart(e) {
-    e.dataTransfer.setData('text/plain', e.target.innerText);
-    setTimeout(() => this.classList.add('dragging'), 0);
-}
-
-function dragEnd() {
-    this.classList.remove('dragging');
-}
-
-function dragOver(e) {
-    e.preventDefault();
-}
-
-function drop(e) {
-    e.preventDefault();
-    const text = e.dataTransfer.getData('text/plain');
-    const tile = document.querySelector(`.word-tile:not(.dragging)`);
-    if (tile && tile.innerText === text) {
-        e.target.appendChild(tile);
-    }
 }
 
 function checkSentence(correct) {
     const builder = document.getElementById('builder-area');
-    const built = Array.from(builder.children).map(child => child.innerText).join(' ');
+    const builtWords = Array.from(builder.querySelectorAll('.word-tile')).map(tile => tile.innerText);
+    const built = builtWords.join(' ');
     
-    const submitBtn = document.querySelector('.submit-btn');
+    const submitBtn = document.getElementById('submit-btn');
     submitBtn.disabled = true;
 
     if (built === correct) {
-        builder.classList.add('correct');
+        builder.style.borderColor = 'var(--primary)';
         mascotText.innerText = "Amazing! Correct!";
         score++;
     } else {
-        builder.classList.add('wrong');
-        mascotText.innerText = `Oops! Correct: "${correct}"`;
+        builder.style.borderColor = 'var(--error)';
+        mascotText.innerText = `Oops! Correct order: "${correct}"`;
     }
 
-    setTimeout(nextExercise, 1500);
+    setTimeout(nextExercise, 2000);
 }
 
 function checkAnswer(btn, selected, correct) {
@@ -250,8 +248,9 @@ function showResults() {
     const xpEarned = score * 10;
     totalXP += xpEarned;
     updateLevel();
-    if (!completedLessons.includes(lessons.indexOf(currentLesson))) {
-        completedLessons.push(lessons.indexOf(currentLesson));
+    const lessonIndex = lessons.indexOf(currentLesson);
+    if (!completedLessons.includes(lessonIndex)) {
+        completedLessons.push(lessonIndex);
     }
     saveProgress();
 
