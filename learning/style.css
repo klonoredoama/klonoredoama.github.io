@@ -167,3 +167,12 @@ body {
 .submit-btn {
     margin-top: 20px;
 }
+.en-word {
+    cursor: help;
+    border-bottom: 1px dashed var(--primary);
+    padding-bottom: 1px;
+}
+
+.en-word:hover {
+    color: var(--primary-dark);
+}
