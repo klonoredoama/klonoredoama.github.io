@@ -1,4 +1,4 @@
-// app.js - FIXED with reliable drag-and-drop, cookies, progression, etc.
+// app.js - Now with click-to-reveal translation on Enêoke words
 let dictionary = {};
 let lessons = [];
 let currentLesson = null;
@@ -14,7 +14,7 @@ const xpDisplay = document.getElementById('xp-display');
 const levelDisplay = document.getElementById('level-display');
 const statsBar = document.getElementById('stats-bar');
 
-let dragged = null; // Global to track dragged tile
+let dragged = null;
 
 // Helper to escape quotes
 function escapeQuotes(str) {
@@ -56,12 +56,67 @@ function saveProgress() {
 }
 
 function updateLevel() {
-    level = Math.floor(totalXP / 100) + 1; // 100 XP per level
+    level = Math.floor(totalXP / 100) + 1;
 }
 
 function updateDisplays() {
     xpDisplay.innerText = `XP: ${totalXP}`;
     levelDisplay.innerText = `Level: ${level}`;
+}
+
+// === NEW: Translation Tooltip ===
+function createTooltip() {
+    const tooltip = document.createElement('div');
+    tooltip.id = 'translation-tooltip';
+    tooltip.style.position = 'absolute';
+    tooltip.style.background = 'var(--primary)';
+    tooltip.style.color = 'white';
+    tooltip.style.padding = '8px 12px';
+    tooltip.style.borderRadius = '8px';
+    tooltip.style.fontSize = '1rem';
+    tooltip.style.fontWeight = 'bold';
+    tooltip.style.pointerEvents = 'none';
+    tooltip.style.zIndex = '1000';
+    tooltip.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+    tooltip.style.opacity = '0';
+    tooltip.style.transition = 'opacity 0.2s';
+    document.body.appendChild(tooltip);
+}
+
+function showTranslation(word, event) {
+    const translation = dictionary[word] || "(no translation)";
+    let tooltip = document.getElementById('translation-tooltip');
+    if (!tooltip) {
+        createTooltip();
+        tooltip = document.getElementById('translation-tooltip');
+    }
+
+    tooltip.textContent = translation;
+    tooltip.style.opacity = '1';
+
+    // Position near click/tap
+    const x = event.pageX || event.touches[0].pageX;
+    const y = event.pageY || event.touches[0].pageY;
+    tooltip.style.left = `${x + 10}px`;
+    tooltip.style.top = `${y + 10}px`;
+}
+
+function hideTranslation() {
+    const tooltip = document.getElementById('translation-tooltip');
+    if (tooltip) tooltip.style.opacity = '0';
+}
+
+// Hide tooltip when clicking elsewhere
+document.addEventListener('click', hideTranslation);
+document.addEventListener('touchstart', hideTranslation);
+
+// Helper to make Enêoke words clickable
+function makeWordClickable(word) {
+    return `<span class="en-word" data-word="${word}" 
+             onclick="showTranslation('${escapeQuotes(word)}', event); event.stopPropagation();"
+             ontouchstart="showTranslation('${escapeQuotes(word)}', event); event.stopPropagation();">
+             ${word}
+            </span>`;
 }
 
 // Init
@@ -126,16 +181,14 @@ function showMultipleChoice(exercise) {
     
     while (options.length < 4) {
         const randomMeaning = allMeanings[Math.floor(Math.random() * allMeanings.length)];
-        if (!options.includes(randomMeaning)) {
-            options.push(randomMeaning);
-        }
+        if (!options.includes(randomMeaning)) options.push(randomMeaning);
     }
     
     options.sort(() => Math.random() - 0.5);
 
     mainContent.innerHTML = `
         <div class="quiz-container">
-            <div class="question-word">${word}</div>
+            <div class="question-word">${makeWordClickable(word)}</div>
             <div class="options-grid">
                 ${options.map(opt => `
                     <button class="option-btn" onclick="checkAnswer(this, '${escapeQuotes(opt)}', '${escapeQuotes(correctAnswer)}')">
@@ -152,12 +205,17 @@ function showSentenceBuilder(exercise) {
     const shuffled = [...correctWords].sort(() => Math.random() - 0.5);
     mascotText.innerText = `Build the sentence: "${exercise.translation}"`;
 
+    // Make each word in the correct sentence clickable too
+    const clickableTarget = exercise.sentence.split(' ').map(makeWordClickable).join(' ');
+
     mainContent.innerHTML = `
         <div class="quiz-container">
-            <div class="question-sentence">${exercise.translation}</div>
+            <div class="question-sentence">${clickableTarget}</div>
             <div class="sentence-builder" id="builder-area"></div>
             <div class="word-pool" id="word-pool">
-                ${shuffled.map(word => `<div class="word-tile" draggable="true">${word}</div>`).join('')}
+                ${shuffled.map(word => 
+                    `<div class="word-tile" draggable="true">${makeWordClickable(word)}</div>`
+                ).join('')}
             </div>
             <button class="btn-primary submit-btn" id="submit-btn">Submit</button>
         </div>
@@ -201,7 +259,9 @@ function setupDragAndDrop() {
 
 function checkSentence(correct) {
     const builder = document.getElementById('builder-area');
-    const builtWords = Array.from(builder.querySelectorAll('.word-tile')).map(tile => tile.innerText);
+    const builtWords = Array.from(builder.querySelectorAll('.word-tile')).map(tile => 
+        tile.querySelector('.en-word')?.dataset.word || tile.innerText.trim()
+    );
     const built = builtWords.join(' ');
     
     const submitBtn = document.getElementById('submit-btn');
