@@ -1,4 +1,4 @@
-// app.js - Now with click-to-reveal translation on Enêoke words
+// app.js - FIXED: Click-to-reveal now uses reliable event delegation
 let dictionary = {};
 let lessons = [];
 let currentLesson = null;
@@ -16,12 +16,12 @@ const statsBar = document.getElementById('stats-bar');
 
 let dragged = null;
 
-// Helper to escape quotes
+// Helper to escape quotes (still needed for safety)
 function escapeQuotes(str) {
     return str.replace(/'/g, "\\'");
 }
 
-// Cookie helpers
+// Cookie helpers (unchanged)
 function setCookie(name, value, days = 365) {
     const date = new Date();
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
@@ -39,7 +39,7 @@ function getCookie(name) {
     return null;
 }
 
-// Load/save progress
+// Load/save progress (unchanged)
 function loadProgress() {
     const savedXP = getCookie('totalXP');
     const savedCompleted = getCookie('completedLessons');
@@ -64,9 +64,11 @@ function updateDisplays() {
     levelDisplay.innerText = `Level: ${level}`;
 }
 
-// === NEW: Translation Tooltip ===
+// === Translation Tooltip ===
+let tooltip = null;
+
 function createTooltip() {
-    const tooltip = document.createElement('div');
+    tooltip = document.createElement('div');
     tooltip.id = 'translation-tooltip';
     tooltip.style.position = 'absolute';
     tooltip.style.background = 'var(--primary)';
@@ -83,43 +85,48 @@ function createTooltip() {
     document.body.appendChild(tooltip);
 }
 
-function showTranslation(word, event) {
+function showTranslation(word, x, y) {
     const translation = dictionary[word] || "(no translation)";
-    let tooltip = document.getElementById('translation-tooltip');
-    if (!tooltip) {
-        createTooltip();
-        tooltip = document.getElementById('translation-tooltip');
-    }
+    if (!tooltip) createTooltip();
 
     tooltip.textContent = translation;
     tooltip.style.opacity = '1';
-
-    // Position near click/tap
-    const x = event.pageX || event.touches[0].pageX;
-    const y = event.pageY || event.touches[0].pageY;
     tooltip.style.left = `${x + 10}px`;
     tooltip.style.top = `${y + 10}px`;
 }
 
 function hideTranslation() {
-    const tooltip = document.getElementById('translation-tooltip');
     if (tooltip) tooltip.style.opacity = '0';
 }
 
-// Hide tooltip when clicking elsewhere
-document.addEventListener('click', hideTranslation);
-document.addEventListener('touchstart', hideTranslation);
+// Event delegation for all Enêoke word clicks
+document.addEventListener('click', (e) => {
+    const enWord = e.target.closest('.en-word');
+    if (enWord) {
+        const word = enWord.dataset.word;
+        const rect = enWord.getBoundingClientRect();
+        const x = rect.right + window.scrollX;
+        const y = rect.top + window.scrollY;
+        showTranslation(word, x, y);
+        e.stopPropagation(); // Prevent bubbling to hide immediately
+    } else {
+        hideTranslation();
+    }
+});
 
-// Helper to make Enêoke words clickable
+// Also hide on touch outside (mobile)
+document.addEventListener('touchstart', (e) => {
+    if (!e.target.closest('.en-word')) {
+        hideTranslation();
+    }
+});
+
+// Helper to make Enêoke words clickable (now just adds class + data attribute)
 function makeWordClickable(word) {
-    return `<span class="en-word" data-word="${word}" 
-             onclick="showTranslation('${escapeQuotes(word)}', event); event.stopPropagation();"
-             ontouchstart="showTranslation('${escapeQuotes(word)}', event); event.stopPropagation();">
-             ${word}
-            </span>`;
+    return `<span class="en-word" data-word="${word}">${word}</span>`;
 }
 
-// Init
+// Init and rest of the code (unchanged except using makeWordClickable)
 async function init() {
     try {
         const dictRes = await fetch('dictionary.json');
@@ -205,7 +212,6 @@ function showSentenceBuilder(exercise) {
     const shuffled = [...correctWords].sort(() => Math.random() - 0.5);
     mascotText.innerText = `Build the sentence: "${exercise.translation}"`;
 
-    // Make each word in the correct sentence clickable too
     const clickableTarget = exercise.sentence.split(' ').map(makeWordClickable).join(' ');
 
     mainContent.innerHTML = `
