@@ -61,13 +61,15 @@
 
 <div class="container">
     <header><h1>êde Lexicon</h1></header>
-
     <div class="controls">
         <input type="text" id="searchInput" placeholder="Search word, IPA, or definition...">
         <select id="posFilter">
             <option value="all">All Parts of Speech</option>
         </select>
         <div class="stats" id="stats">Total Words: 0</div>
+
+        <!-- Download / open PDF button -->
+        <button onclick="window.location.href='êde.pdf'">Documentation</button>
     </div>
 
     <div id="dictionaryDisplay"></div>
