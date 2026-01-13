@@ -14,6 +14,35 @@
         body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
         .container { max-width: 900px; margin: 0 auto; }
         
+        .lang-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 200;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .lang-selector label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        .lang-selector select {
+            padding: 8px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            background: white;
+        }
+        
         .controls { 
             background: white; padding: 20px; border-radius: 12px; 
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); 
@@ -49,15 +78,44 @@
         }
         .meaning { color: #475569; flex: 1; }
         .stats { grid-column: span 2; font-size: 0.85rem; color: #64748b; }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--ipa-color);
+        }
+        
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
 
         @media (max-width: 700px) {
             .controls { grid-template-columns: 1fr; }
             .entry { flex-direction: column; gap: 6px; }
             .word-box { min-width: auto; }
+            .lang-selector {
+                position: static;
+                margin-bottom: 20px;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
+
+<div class="lang-selector">
+    <label for="langSelect">Language:</label>
+    <select id="langSelect">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="de">Deutsch</option>
+    </select>
+</div>
 
 <div class="container">
     <header><h1>êde Lexicon</h1></header>
@@ -67,8 +125,6 @@
             <option value="all">All Parts of Speech</option>
         </select>
         <div class="stats" id="stats">Total Words: 0</div>
-
-        <!-- Download / open PDF button -->
         <button onclick="window.location.href='êde.pdf'">Documentation</button>
     </div>
 
@@ -76,168 +132,51 @@
 </div>
 
 <script>
-    const dictionaryData = {
-      "adêâķ": { "ipa": "/æd.’i:.eɪs/", "pos": "int", "meaning": "goodbye, farewell" },
-      "âdeķ": { "ipa": "/’eɪ.dɛs/", "pos": "prep", "meaning": "here" },
-      "akvâ": { "ipa": "/æk.’veɪ/", "pos": "n", "meaning": "water" },
-      "âlên": { "ipa": "/'eɪ.liːn/", "pos": "adj", "meaning": "third person neutral possessive" },
-      "âlêr": { "ipa": "/'eɪ.ǀiːr/", "pos": "pro", "meaning": "third person neutral" },
-      "âmar": { "ipa": "/’eɪ.mær/", "pos": "adj", "meaning": "yellow" },
-      "ażǒl": { "ipa": "/æʃ.’u:l/", "pos": "adj", "meaning": "blue" },
-      "blânk": { "ipa": "/bleɪnk/", "pos": "adj", "meaning": "white" },
-      "dâ": { "ipa": "/’deɪ/", "pos": "prep", "meaning": "of, from, by" },
-      "dêja": { "ipa": "/’di:.jæ/", "pos": "n", "meaning": "day" },
-      "dǒrmêķ": { "ipa": "/’du:r.mi:s/", "pos": "n", "meaning": "a sleep, nap, or rest" },
-      "dǒrmêķâķ": { "ipa": "/’du:r.mi:.seɪs/", "pos": "v", "meaning": "to sleep, nap, or rest" },
-      "dǒrmêķân": { "ipa": "/’du:r.mi:.seɪn/", "pos": "adj", "meaning": "asleep, napping, resting, dormant" },
-      "êdǒâma": { "ipa": "/’i:.du:.eɪ.mæ/", "pos": "n", "meaning": "language" },
-      "êķ": { "ipa": "/’i:s/", "pos": "v", "meaning": "third person helping verb for 'to be'" },
-      "eķabâķ": { "ipa": "/ɛs.æ.’beɪs/", "pos": "v", "meaning": "to write" },
-      "eķabân": { "ipa": "/ɛs.æ.’beɪs/", "pos": "n", "meaning": "written" },
-      "eķabê": { "ipa": "/ɛs.æ.’bi:/", "pos": "n", "meaning": "writing" },
-      "êmed": { "ipa": "/i:.’mɛd/", "pos": "adj", "meaning": "pretty, beautiful, visually pleasing" },
-      "pon": { "ipa": "/pɔn/", "pos": "prep", "meaning": "on, above, attached to, mounted to, on the side of." },
-      "ênâķǒm": { "ipa": "/'i:.neɪ.su:m/", "pos": "v", "meaning": "to feel (sentimental)" },
-      "ênâlêr": { "ipa": "/'i:.neɪ.li:r/", "pos": "n", "meaning": "empathy" },
-      "ênâlêrâķ": { "ipa": "/'i:.neɪ.li:r.eɪs/", "pos": "v", "meaning": "to feel empathy for" },
-      "ênâlêrân": { "ipa": "/'i:.neɪ.li:r.eɪn/", "pos": "adj", "meaning": "empathetic" },
-      "ê­nêmo": { "ipa": "/’i:.ni:.mɔ/", "pos": "n", "meaning": "mystery, enigma" },
-      "ê­nêmoķ": { "ipa": "/’i:.ni:.mɔs/", "pos": "adj", "meaning": "mysterious, enigmatic" },
-      "Enêoķe": { "ipa": "/ɛn.’i:.ɔ.sɛ/", "pos": "n", "meaning": "raccoon" },
-      "êntêon": { "ipa": "/’i:n.ti:.ɔn/", "pos": "n", "meaning": "intent, willingness, eagerness, purpose" },
-      "êntêonân": { "ipa": "/’i:n.ti:.ɔn.eɪn/", "pos": "adv", "meaning": "with the intent of" },
-      "epêvolâķ": { "ipa": "/ɛp.’i:.vɔ.leɪs/", "pos": "v", "meaning": "to desire or want something" },
-      "epêvolǒ": { "ipa": "/ɛp.’i:.vɔl.u:/", "pos": "n", "meaning": "a desire, wish, or want" },
-      "êroķ": { "ipa": "/’i:r.ɔs/", "pos": "v", "meaning": "second person helping verb for 'to be'" },
-      "Erṫ": { "ipa": "/ɛrθ/", "pos": "n", "meaning": "Earth" },
-      "ê­tê": { "ipa": "/’i:.ti:/", "pos": "prep", "meaning": "this, that, those" },
-      "êtor": { "ipa": "/’i:.tʌr/", "pos": "n", "meaning": "rate" },
-      "extrǒ": { "ipa": "/ɛks.’tru:/", "pos": "n", "meaning": "a limb" },
-      "extrǒhîķetâ": { "ipa": "/ɛks.’tru:.haɪ.sɛ.tâ/", "pos": "n", "meaning": "head" },
-      "extrǒman": { "ipa": "/ɛks.’tru:.mæn/", "pos": "n", "meaning": "a foot / legs" },
-      "extrǒmanêķetâ": { "ipa": "/ɛks.’tru:.mæn.i:.sɛt.eɪ/", "pos": "n", "meaning": "a toe" },
-      "extrǒmedênu": { "ipa": "/ɛks.’tru:.mɛd.i:.nʌ/", "pos": "n", "meaning": "an arm" },
-      "extrǒmedman": { "ipa": "/ɛks.’tru:.mɛd.mæn/", "pos": "n", "meaning": "a hand" },
-      "extrǒmedmanêķetâ": { "ipa": "/ɛks.’tru:.mɛd.mæn.i:.sɛt.eɪ/", "pos": "n", "meaning": "a finger" },
-      "fanâķǒm": { "ipa": "/fæ.'neɪ.su:m/", "pos": "v", "meaning": "to feel (physical)" },
-      "fêrgâķ": { "ipa": "/’fi:r.geɪs/", "pos": "verb", "meaning": "Burning, to burn" },
-      "fêrgân": { "ipa": "/’fi:r.geɪn/", "pos": "adj", "meaning": "Fiery" },
-      "fêrgǒ": { "ipa": "/’fi:r.gu:/", "pos": "n", "meaning": "fire" },
-      "Fǒkażhog": { "ipa": "/’fu:k.æs.hɔg/", "pos": "adj", "meaning": "good" },
-      "fovǒr": { "ipa": "/fɔ.’vu:r/", "pos": "n", "meaning": "favor for, appreciation" },
-      "fovǒrâķ": { "ipa": "/fɔ.’vu:r.eɪs/", "pos": "v", "meaning": "to hold favor with, to appreciate, to like" },
-      "framînt": { "ipa": "/’fræ.maɪnt/", "pos": "n", "meaning": "friend" },
-      "frogeķ": { "ipa": "/frɔg.ɛs/", "pos": "n", "meaning": "frog" },
-      "ģân": { "ipa": "/’dʒeɪn/", "pos": "n", "meaning": "change" },
-      "ģânâķ": { "ipa": "/’dʒeɪn.eɪs/", "pos": "v", "meaning": "to change; to modify" },
-      "Ģel": { "ipa": "/dʒel/", "pos": "adj", "meaning": "masculine" },
-      "Ģelên": { "ipa": "/dʒɛl.ˈiːn/", "pos": "adj", "meaning": "third person masculine possessive" },
-      "Ģelêr": { "ipa": "/dʒɛ.’li:ɹ/", "pos": "pro", "meaning": "third person masculine" },
-      "ģelvên": { "ipa": "/dʒɛl.’vi:n/", "pos": "n", "meaning": "a man" },
-      "grê": { "ipa": "/.gri:/", "pos": "adj", "meaning": "gray" },
-      "hî": { "ipa": "/’haɪ/", "pos": "adj", "meaning": "high" },
-      "hîķetâ": { "ipa": "/’haɪ.sɛ.tâ/", "pos": "adj", "meaning": "highest" },
-      "hît": { "ipa": "/’haɪt/", "pos": "adj", "meaning": "higher" },
-      "hog": { "ipa": "/’hɔg/", "pos": "n", "meaning": "hedgehog" },
-      "jânep": { "ipa": "/’jeɪ.nɛp/", "pos": "adj", "meaning": "full" },
-      "jo": { "ipa": "/’jɔ/", "pos": "pro", "meaning": "first person singular pronoun" },
-      "joķ": { "ipa": "/’jɔs/", "pos": "pro", "meaning": "first person plural pronoun" },
-      "jon": { "ipa": "/’jɔn/", "pos": "adj", "meaning": "first person possessive" },
-      "jot": { "ipa": "/’jɔt/", "pos": "pro", "meaning": "second person singular pronoun" },
-      "joteķ": { "ipa": "/jɔt.’ɛs/", "pos": "pro", "meaning": "second person plural pronoun" },
-      "joten": { "ipa": "/ˈjɔtɛn/", "pos": "adj", "meaning": "second person possessive" },
-      "ǩaloķâķ": { "ipa": "/skæ.lɔ.seɪs/", "pos": "v", "meaning": "to make slippery" },
-      "ǩaloķǒ": { "ipa": "/skæ.lɔ.’su:/", "pos": "adj", "meaning": "slippery; difficult to hold firmly due to wetness/sliminess" },
-      "ķalǒtǒn": { "ipa": "/sæl.’u:.tu:n/", "pos": "int", "meaning": "greeting; hello" },
-      "kapêu": { "ipa": "/kæp.’i:.ʌ/", "pos": "n", "meaning": "paper" },
-      "ķê": { "ipa": "/’si:/", "pos": "particle", "meaning": "yes (positive answer/exclamation)" },
-      "ķexê": { "ipa": "/sɛk.’si:/", "pos": "adj", "meaning": "sexually appealing" },
-      "ķlǒnor": { "ipa": "/’slu:.nɔr/", "pos": "n", "meaning": "dictionary" },
-      "ķlǒpân": { "ipa": "/’slu:.peɪn/", "pos": "adj", "meaning": "sloped" },
-      "ķlǒpu": { "ipa": "/’slu:.pʌ/", "pos": "n", "meaning": "slope" },
-      "ķǒ": { "ipa": "/’su:/", "pos": "v", "meaning": "first person helping verb for 'to be'" },
-      "ķog": { "ipa": "/sɔg/", "pos": "v", "meaning": "to leave or go" },
-      "ķoķâ": { "ipa": "/sɔ.’seɪ/", "pos": "n", "meaning": "cocoa" },
-      "kǒpâ": { "ipa": "/’ku:.pɛ/", "pos": "n", "meaning": "a cup; object one drinks from" },
-      "krêdan": { "ipa": "/’kri:.dæn/", "pos": "n", "meaning": "creation, something artificial" },
-      "krêdanâķ": { "ipa": "/’kri:.dæn.eɪs/", "pos": "v", "meaning": "to create" },
-      "kronu": { "ipa": "/kræ.nʌ/", "pos": "n", "meaning": "time" },
-      "laktê": { "ipa": "/læk.ti:/", "pos": "n", "meaning": "milk" },
-      "lêla": { "ipa": "/li:.læ/", "pos": "adj", "meaning": "lilac" },
-      "lîlî": { "ipa": "/li:.li:/", "pos": "adj", "meaning": "small" },
-      "lîlîtênal": { "ipa": "/li:.li:.ti:.næl/", "pos": "n", "meaning": "Dwarf planet" },
-      "lîtênal": { "ipa": "/li:.ti:.næl/", "pos": "n", "meaning": "Moon" },
-      "mablâ": { "ipa": "/mæb.’leɪ/", "pos": "n", "meaning": "apple" },
-      "maģês": { "ipa": "/mæ.’dʒi:s/", "pos": "adj", "meaning": "more, to a higher degree" },
-      "man": { "ipa": "/mæn/", "pos": "adj", "meaning": "low" },
-      "mând": { "ipa": "/meɪnd/", "pos": "v", "meaning": "to eat" },
-      "manêķetâ": { "ipa": "/mæn.’i:.sɛt.eɪ/", "pos": "adj", "meaning": "lowest" },
-      "manêt": { "ipa": "/mæn.’i:t/", "pos": "adj", "meaning": "lower" },
-      "mârǒn": { "ipa": "/’meɪ.ru:n/", "pos": "adj", "meaning": "brown" },
-      "medênu": { "ipa": "/mɛd.’i:.nʌ/", "pos": "adj", "meaning": "middle" },
-      "mîldo": { "ipa": "/’mi:l.dɔ/", "pos": "adj", "meaning": "cute, adorable" },
-      "nô": { "ipa": "/’nu:/", "pos": "particle", "meaning": "negation, not, none, no" },
-      "nǒgu": { "ipa": "/’nu:.gʌ/", "pos": "adj", "meaning": "multiple, many" },
-      "nomâ": { "ipa": "/nɔ.’meɪ/", "pos": "n", "meaning": "name" },
-      "nǒker": { "ipa": "/’nu:.kɛr/", "pos": "adj", "meaning": "black" },
-      "nǒżâ": { "ipa": "/’nu:.ʃeɪ/", "pos": "n", "meaning": "night" },
-      "o": { "ipa": "/ͻ/", "pos": "conj", "meaning": "but, however" },
-      "onlê": { "ipa": "/ͻn.’li:/", "pos": "adv", "meaning": "only, nothing more" },
-      "orênģ": { "ipa": "/ͻ.’ri:nʤ/", "pos": "adj", "meaning": "orange" },
-      "pânêb": { "ipa": "/’peɪ.ni:b/", "pos": "n", "meaning": "bread" },
-      "patżka": { "ipa": "/pæt.ʃkæ/", "pos": "n", "meaning": "potato" },
-      "pêrdǒ": { "ipa": "/’pi:r.du:/", "pos": "v", "meaning": "pardon, excuse" },
-      "poķê": { "ipa": "/pɔ.’si:/", "pos": "n", "meaning": "position" },
-      "prot": { "ipa": "/prɔt/", "pos": "prep", "meaning": "because of" },
-      "prǒtjont": { "ipa": "/’pru:t.jɔnt/", "pos": "adj", "meaning": "creepy, scary" },
-      "rǒ": { "ipa": "/’ru:/", "pos": "adj", "meaning": "red" },
-      "rǒķa": { "ipa": "/’ru:.sæ/", "pos": "adj", "meaning": "pink" },
-      "razǒn": { "ipa": "/ræ.’zu:n/", "pos": "n", "meaning": "reason" },
-      "razǒnâķ": { "ipa": "/ræ.’zu:n.eɪs/", "pos": "v", "meaning": "to reason" },
-      "tê": { "ipa": "/'ti:/", "pos": "conj", "meaning": "and, also" },
-      "tênal": { "ipa": "/'ti:.næl/", "pos": "n", "meaning": "A planet" },
-      "Têpereb": { "ipa": "/’ti:.pɛr.ɛb/", "pos": "n", "meaning": "a drink" },
-      "têperebâķ": { "ipa": "/’ti:.pɛr.ɛb.eɪs/", "pos": "v", "meaning": "to drink" },
-      "terkwîķ": { "ipa": "/terk.’waɪs/", "pos": "adj", "meaning": "turquoise" },
-      "tǒdâķ": { "ipa": "/’tu:.deɪs/", "pos": "adj", "meaning": "should" },
-      "trelķǒm": { "ipa": "/trɛl.’su:m/", "pos": "adj", "meaning": "crazy, deranged" },
-      "trelķǒmâķ": { "ipa": "/trɛl.’su:.meɪs/", "pos": "v", "meaning": "to go insane, to become deranged" },
-      "ûnê": { "ipa": "/’ju:.ni:/", "pos": "adj", "meaning": "singular, one" },
-      "ûnîķtâteķ": { "ipa": "/’ju:.’nˈaɪ.steɪtɛs/", "pos": "n", "meaning": "United States" },
-      "vêlât": { "ipa": "/’vi:.leɪt/", "pos": "adj", "meaning": "violet" },
-      "vên": { "ipa": "/’vi:n/", "pos": "n", "meaning": "a human (gender neutral)" },
-      "vêrdâ": { "ipa": "/’vi:r.deɪ/", "pos": "adj", "meaning": "green" },
-      "Žâlêr": { "ipa": "/’ʒeɪ.li:ɹ/", "pos": "pro", "meaning": "third person feminine" },
-      "Žâlo": { "ipa": "/’ʒeɪ.lɔ/", "pos": "adj", "meaning": "feminine" },
-      "Žâlon": { "ipa": "/ˈʒeɪ.lɔn/", "pos": "adj", "meaning": "third person feminine possessive" },
-      "žâlovên": { "ipa": "/’ʒeɪ.lɔ.vi:n/", "pos": "n", "meaning": "a woman" },
-      "žempênte": { "ipa": "/ʒɛm.’pi:n.tɛ/", "pos": "n", "meaning": "snake" },
-      "żǒkêarâķ": { "ipa": "/’ʃu:.ki:.ær.eɪs/", "pos": "v", "meaning": "to suck" },
-      "enkatêķ": { "ipa": "/ɛn.kæ.'ti:s/", "pos": "int", "meaning": "nice to meet you" },
-      "ķtǒdê": { "ipa": "/'stu:.di:/", "pos": "n", "meaning": "a student" },
-      "ķtǒdâķ": { "ipa": "/'stu:.deɪs/", "pos": "v", "meaning": "to learn, study, or research" },
-      "ǩǒldâ": { "ipa": "/'sku:l.deɪ/", "pos": "n", "meaning": "a school" },
-      "blâtunân": { "ipa": "/'bleɪ.tʌn.eɪn/", "pos": "adj", "meaning": "blatant, obvious" },
-      "impaģ": { "ipa": "/ɪm.pædʒ/", "pos": "n", "meaning": "something that damages something else" },
-      "impaģâķ": { "ipa": "/ɪm.pædʒ.eɪs/", "pos": "v", "meaning": "to damage" },
-      "impaģân": { "ipa": "/ɪm.pædʒ.eɪn/", "pos": "adj", "meaning": "damaged" },
-      "plârîv": { "ipa": "/'pleɪ.raɪv/", "pos": "n", "meaning": "a plan" },
-      "plârîvâķ": { "ipa": "/'pleɪ.raɪv.eɪs/", "pos": "v", "meaning": "to plan" },
-      "plârîvân": { "ipa": "/'pleɪ.raɪv.eɪn/", "pos": "adj", "meaning": "planned" },
-      "żǒkêpênte": { "ipa": "/’ʃu:.ki:.pi:n.tɛ/", "pos": "n", "meaning": "snake sucker (insult)" }
+    let dictionaryData = {};
+    let currentLanguage = 'en';
+
+    // Language file configuration
+    const languageFiles = {
+        'en': 'dictionary-en.json',
+        'es': 'dictionary-es.json',
+        'fr': 'dictionary-fr.json',
+        'de': 'dictionary-de.json'
     };
 
     function normalize(str) {
         return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-                  .replace(/ķ/g, 'k').replace(/ż/g, 'z').replace(/ģ/g, 'g').replace(/ž/g, 'z').replace(/ǩ/g, 'k').replace(/â/g, 'a');
+                  .replace(/ķ/g, 'k').replace(/ż/g, 'z').replace(/ģ/g, 'g')
+                  .replace(/ž/g, 'z').replace(/ǩ/g, 'k').replace(/â/g, 'a');
+    }
+
+    async function loadLanguage(lang) {
+        const display = document.getElementById('dictionaryDisplay');
+        display.innerHTML = '<div class="loading">Loading dictionary...</div>';
+        
+        try {
+            const response = await fetch(languageFiles[lang]);
+            if (!response.ok) {
+                throw new Error(`Failed to load ${lang} dictionary`);
+            }
+            dictionaryData = await response.json();
+            currentLanguage = lang;
+            init();
+        } catch (error) {
+            display.innerHTML = `<div class="error">Error loading dictionary: ${error.message}<br>Make sure ${languageFiles[lang]} exists in the same directory.</div>`;
+            console.error('Dictionary load error:', error);
+        }
     }
 
     function init() {
+        const posFilter = document.getElementById('posFilter');
+        posFilter.innerHTML = '<option value="all">All Parts of Speech</option>';
+        
         const poses = [...new Set(Object.values(dictionaryData).map(e => e.pos))].sort();
         poses.forEach(pos => {
             const opt = document.createElement('option');
-            opt.value = pos; opt.textContent = pos;
-            document.getElementById('posFilter').appendChild(opt);
+            opt.value = pos; 
+            opt.textContent = pos;
+            posFilter.appendChild(opt);
         });
         render();
     }
@@ -267,7 +206,8 @@
             if (firstLetter !== currentLetter) {
                 currentLetter = firstLetter;
                 const h = document.createElement('div');
-                h.className = 'letter-header'; h.textContent = currentLetter;
+                h.className = 'letter-header'; 
+                h.textContent = currentLetter;
                 display.appendChild(h);
             }
 
@@ -288,7 +228,11 @@
 
     document.getElementById('searchInput').addEventListener('input', render);
     document.getElementById('posFilter').addEventListener('change', render);
-    window.onload = init;
+    document.getElementById('langSelect').addEventListener('change', (e) => {
+        loadLanguage(e.target.value);
+    });
+
+    window.onload = () => loadLanguage('en');
 </script>
 </body>
 </html>
