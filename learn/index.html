@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Êdôâma Learning</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(180deg, #58cc02 0%, #4caf50 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header with stats */
+.header {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: bold;
+  color: #58cc02;
+}
+
+.stats {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.flame { color: #ff9600; font-size: 24px; }
+.gem { color: #1cb0f6; font-size: 24px; }
+.xp-badge {
+  background: #58cc02;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+/* Progress bar */
+.level-progress {
+  background: white;
+  border-radius: 12px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.level-text {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 16px;
+  background: #e5e5e5;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #58cc02 0%, #7ed321 100%);
+  transition: width 0.5s ease;
+  border-radius: 8px;
+}
+
+/* Units display */
+.units-container {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.unit {
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.unit-header {
+  background: linear-gradient(135deg, #1cb0f6 0%, #1899d6 100%);
+  color: white;
+  padding: 15px 20px;
+  border-radius: 12px;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(28, 176, 246, 0.3);
+}
+
+.lessons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 15px;
+  padding-left: 20px;
+}
+
+.lesson-btn {
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 50%;
+  background: #e5e5e5;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  position: relative;
+  transition: all 0.2s;
+  box-shadow: 0 4px 0 #afafaf;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.lesson-btn:hover {
+  transform: translateY(-2px);
+}
+
+.lesson-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #afafaf;
+}
+
+.lesson-btn.completed {
+  background: linear-gradient(135deg, #ffc800 0%, #ffb800 100%);
+  color: white;
+  box-shadow: 0 4px 0 #d69e00;
+}
+
+.lesson-btn.current {
+  background: linear-gradient(135deg, #58cc02 0%, #4caf50 100%);
+  color: white;
+  box-shadow: 0 4px 0 #3d9101;
+  animation: pulse 2s infinite;
+}
+
+.lesson-btn.locked {
+  background: #d0d0d0;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.lesson-btn .check {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: white;
+  color: #58cc02;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Lesson view */
+.lesson-view {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  min-height: 500px;
+}
+
+.lesson-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e5e5e5;
+}
+
+.back-btn {
+  background: #e5e5e5;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.back-btn:hover {
+  background: #d0d0d0;
+}
+
+.lesson-progress {
+  flex: 1;
+  margin: 0 20px;
+  height: 12px;
+  background: #e5e5e5;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.lesson-progress-fill {
+  height: 100%;
+  background: #58cc02;
+  transition: width 0.3s;
+}
+
+/* Question card */
+.question-card {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.question-prompt {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.word-display {
+  background: #f7f7f7;
+  border: 3px solid #e5e5e5;
+  border-radius: 16px;
+  padding: 30px;
+  margin: 30px auto;
+  max-width: 500px;
+}
+
+.word-display .word {
+  font-size: 36px;
+  font-weight: bold;
+  color: #1cb0f6;
+  margin-bottom: 10px;
+}
+
+.word-display .ipa {
+  font-size: 20px;
+  color: #777;
+  font-style: italic;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  max-width: 600px;
+  margin: 30px auto;
+}
+
+.option-btn {
+  padding: 20px;
+  border: 3px solid #e5e5e5;
+  border-radius: 16px;
+  background: white;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 600;
+  transition: all 0.2s;
+  color: #333;
+}
+
+.option-btn:hover {
+  border-color: #d0d0d0;
+  background: #f7f7f7;
+  transform: translateY(-2px);
+}
+
+.option-btn.selected {
+  border-color: #1cb0f6;
+  background: #e3f2fd;
+}
+
+.option-btn.correct {
+  border-color: #58cc02;
+  background: #d7f7c2;
+  color: #58cc02;
+}
+
+.option-btn.incorrect {
+  border-color: #ff4b4b;
+  background: #ffe0e0;
+  color: #ff4b4b;
+}
+
+.option-btn:disabled {
+  cursor: not-allowed;
+}
+
+/* Check button */
+.check-btn {
+  background: linear-gradient(135deg, #58cc02 0%, #4caf50 100%);
+  color: white;
+  border: none;
+  padding: 16px 48px;
+  border-radius: 16px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 30px;
+  box-shadow: 0 4px 0 #3d9101;
+  transition: all 0.2s;
+}
+
+.check-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #3d9101;
+}
+
+.check-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #3d9101;
+}
+
+.check-btn:disabled {
+  background: #e5e5e5;
+  box-shadow: 0 4px 0 #afafaf;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Feedback */
+.feedback {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 30px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  transform: translateY(100%);
+  transition: transform 0.3s;
+}
+
+.feedback.show {
+  transform: translateY(0);
+}
+
+.feedback.correct {
+  background: #58cc02;
+}
+
+.feedback.incorrect {
+  background: #ff4b4b;
+}
+
+/* Completion screen */
+.completion {
+  text-align: center;
+  padding: 40px;
+}
+
+.completion-icon {
+  font-size: 80px;
+  margin-bottom: 20px;
+}
+
+.completion h2 {
+  font-size: 36px;
+  color: #58cc02;
+  margin-bottom: 20px;
+}
+
+.xp-earned {
+  font-size: 48px;
+  font-weight: bold;
+  color: #ffc800;
+  margin: 20px 0;
+}
+
+.continue-btn {
+  background: linear-gradient(135deg, #58cc02 0%, #4caf50 100%);
+  color: white;
+  border: none;
+  padding: 16px 48px;
+  border-radius: 16px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 20px;
+  box-shadow: 0 4px 0 #3d9101;
+}
+
+.continue-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #3d9101;
+}
+
+.hidden {
+  display: none;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">🦝 Êdôâma</div>
+    <div class="stats">
+      <div class="stat-item">
+        <span class="flame">🔥</span>
+        <span id="streak">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="gem">💎</span>
+        <span id="gems">0</span>
+      </div>
+      <div class="xp-badge">
+        <span id="xp">0</span> XP
+      </div>
+    </div>
+  </div>
+
+  <div class="level-progress">
+    <div class="level-text">
+      <span>Level <span id="level">1</span></span>
+      <span><span id="current-xp">0</span> / <span id="next-level-xp">100</span> XP</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="level-progress-fill"></div>
+    </div>
+  </div>
+
+  <!-- Units View -->
+  <div class="units-container" id="units-view">
+    <div id="units"></div>
+  </div>
+
+  <!-- Lesson View -->
+  <div class="lesson-view hidden" id="lesson-view">
+    <div class="lesson-header">
+      <button class="back-btn" id="back-btn">← Back</button>
+      <div class="lesson-progress">
+        <div class="lesson-progress-fill" id="lesson-progress-fill"></div>
+      </div>
+      <span id="question-counter">1/5</span>
+    </div>
+    <div id="lesson-content"></div>
+  </div>
+</div>
+
+<div class="feedback" id="feedback"></div>
+
+<script>
+
+const storage = {
+  get(key) {
+    return localStorage.getItem(key);
+  },
+  set(key, value) {
+    localStorage.setItem(key, value);
+  }
+};
+
+let userProgress = {
+  xp: 0,
+  level: 1,
+  gems: 0,
+  streak: 0,
+  completedLessons: {},
+  lastStudyDate: null
+};
+
+function loadProgress() {
+  const saved = storage.get('edoama_progress');
+  if (saved) {
+    userProgress = JSON.parse(saved);
+  }
+  updateHeader();
+}
+
+function saveProgress() {
+  storage.set('edoama_progress', JSON.stringify(userProgress));
+}
+
+function addXP(amount) {
+  userProgress.xp += amount;
+  
+  // Level up logic
+  const xpForNextLevel = userProgress.level * 100;
+  if (userProgress.xp >= xpForNextLevel) {
+    userProgress.level++;
+    userProgress.gems += 10;
+  }
+  
+  updateHeader();
+  saveProgress();
+}
+
+function updateHeader() {
+  document.getElementById('xp').textContent = userProgress.xp;
+  document.getElementById('level').textContent = userProgress.level;
+  document.getElementById('gems').textContent = userProgress.gems;
+  document.getElementById('streak').textContent = userProgress.streak;
+  
+  const xpForNextLevel = userProgress.level * 100;
+  const xpInCurrentLevel = userProgress.xp % 100;
+  const progress = (xpInCurrentLevel / 100) * 100;
+  
+  document.getElementById('current-xp').textContent = xpInCurrentLevel;
+  document.getElementById('next-level-xp').textContent = 100;
+  document.getElementById('level-progress-fill').style.width = progress + '%';
+}
+
+let courseData = [];
+
+function renderUnits() {
+  const unitsDiv = document.getElementById('units');
+  unitsDiv.innerHTML = '';
+  
+  courseData.forEach((unit, unitIndex) => {
+    const unitDiv = document.createElement('div');
+    unitDiv.className = 'unit';
+    
+    const header = document.createElement('div');
+    header.className = 'unit-header';
+    header.textContent = unit.title;
+    unitDiv.appendChild(header);
+    
+    const lessonsGrid = document.createElement('div');
+    lessonsGrid.className = 'lessons-grid';
+    
+    unit.lessons.forEach((lesson, lessonIndex) => {
+      const btn = document.createElement('button');
+      btn.className = 'lesson-btn';
+      
+      const lessonKey = `${unitIndex}-${lessonIndex}`;
+      const isCompleted = userProgress.completedLessons[lessonKey];
+      const isLocked = lessonIndex > 0 && !userProgress.completedLessons[`${unitIndex}-${lessonIndex - 1}`];
+      
+      if (isCompleted) {
+        btn.classList.add('completed');
+        const check = document.createElement('span');
+        check.className = 'check';
+        check.textContent = '✓';
+        btn.appendChild(check);
+      } else if (!isLocked) {
+        btn.classList.add('current');
+      } else {
+        btn.classList.add('locked');
+      }
+      
+      const text = document.createElement('div');
+      text.textContent = lesson.title;
+      btn.appendChild(text);
+      
+      if (!isLocked) {
+        btn.addEventListener('click', () => startLesson(unit, lesson, unitIndex, lessonIndex));
+      }
+      
+      lessonsGrid.appendChild(btn);
+    });
+    
+    unitDiv.appendChild(lessonsGrid);
+    unitsDiv.appendChild(unitDiv);
+  });
+}
+
+let currentLesson = null;
+let currentQuestions = [];
+let currentQuestionIndex = 0;
+let selectedAnswer = null;
+
+function startLesson(unit, lesson, unitIndex, lessonIndex) {
+  currentLesson = { unit, lesson, unitIndex, lessonIndex };
+  currentQuestionIndex = 0;
+  
+  // Generate questions
+  currentQuestions = [];
+  
+  // Add word-to-meaning questions
+  lesson.words.forEach(word => {
+    currentQuestions.push({
+      type: 'word-to-meaning',
+      word: word,
+      correctAnswer: word.meaning,
+      options: generateOptions(lesson.words, word.meaning, w => w.meaning)
+    });
+  });
+  
+  // Add meaning-to-word questions
+  lesson.words.forEach(word => {
+    currentQuestions.push({
+      type: 'meaning-to-word',
+      word: word,
+      correctAnswer: word.word,
+      options: generateOptions(lesson.words, word.word, w => w.word)
+    });
+  });
+  
+  // Shuffle questions
+  currentQuestions = shuffleArray(currentQuestions).slice(0, 5);
+  
+  // Show lesson view
+  document.getElementById('units-view').classList.add('hidden');
+  document.getElementById('lesson-view').classList.remove('hidden');
+  
+  showQuestion();
+}
+
+function generateOptions(words, correctAnswer, selector) {
+  const allOptions = words.map(selector);
+  const incorrectOptions = allOptions.filter(opt => opt !== correctAnswer);
+  const shuffled = shuffleArray(incorrectOptions);
+  const options = [correctAnswer, ...shuffled.slice(0, 2)];
+  return shuffleArray(options);
+}
+
+function showQuestion() {
+  const question = currentQuestions[currentQuestionIndex];
+  selectedAnswer = null;
+  
+  // Update progress
+  const progress = ((currentQuestionIndex + 1) / currentQuestions.length) * 100;
+  document.getElementById('lesson-progress-fill').style.width = progress + '%';
+  document.getElementById('question-counter').textContent = `${currentQuestionIndex + 1}/${currentQuestions.length}`;
+  
+  // Render question
+  const content = document.getElementById('lesson-content');
+  content.innerHTML = '';
+  
+  const card = document.createElement('div');
+  card.className = 'question-card';
+  
+  if (question.type === 'word-to-meaning') {
+    const prompt = document.createElement('div');
+    prompt.className = 'question-prompt';
+    prompt.textContent = 'What does this word mean?';
+    card.appendChild(prompt);
+    
+    const wordDisplay = document.createElement('div');
+    wordDisplay.className = 'word-display';
+    wordDisplay.innerHTML = `
+      <div class="word">${question.word.word}</div>
+      <div class="ipa">${question.word.ipa}</div>
+    `;
+    card.appendChild(wordDisplay);
+  } else {
+    const prompt = document.createElement('div');
+    prompt.className = 'question-prompt';
+    prompt.textContent = `Which word means "${question.word.meaning}"?`;
+    card.appendChild(prompt);
+  }
+  
+  const optionsGrid = document.createElement('div');
+  optionsGrid.className = 'options-grid';
+  
+  question.options.forEach(option => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = option;
+    btn.addEventListener('click', () => selectOption(btn, option, question.correctAnswer));
+    optionsGrid.appendChild(btn);
+  });
+  
+  card.appendChild(optionsGrid);
+  
+  const checkBtn = document.createElement('button');
+  checkBtn.className = 'check-btn';
+  checkBtn.textContent = 'CHECK';
+  checkBtn.disabled = true;
+  checkBtn.id = 'check-answer-btn';
+  checkBtn.addEventListener('click', checkAnswer);
+  card.appendChild(checkBtn);
+  
+  content.appendChild(card);
+}
+
+function selectOption(btn, option, correctAnswer) {
+  // Clear previous selection
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  
+  // Select this option
+  btn.classList.add('selected');
+  selectedAnswer = option;
+  
+  // Enable check button
+  document.getElementById('check-answer-btn').disabled = false;
+}
+
+function checkAnswer() {
+  const question = currentQuestions[currentQuestionIndex];
+  const isCorrect = selectedAnswer === question.correctAnswer;
+  
+  // Disable all buttons
+  document.querySelectorAll('.option-btn').forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === question.correctAnswer) {
+      btn.classList.add('correct');
+    } else if (btn.textContent === selectedAnswer && !isCorrect) {
+      btn.classList.add('incorrect');
+    }
+  });
+  
+  // Show feedback
+  const feedback = document.getElementById('feedback');
+  feedback.className = 'feedback show ' + (isCorrect ? 'correct' : 'incorrect');
+  feedback.textContent = isCorrect ? '✓ Correct! +10 XP' : '✗ Incorrect. Try again next time!';
+  
+  if (isCorrect) {
+    addXP(10);
+  }
+  
+  // Change check button to continue
+  const checkBtn = document.getElementById('check-answer-btn');
+  checkBtn.textContent = 'CONTINUE';
+  checkBtn.disabled = false;
+  checkBtn.onclick = nextQuestion;
+  
+  setTimeout(() => {
+    feedback.classList.remove('show');
+  }, 2000);
+}
+
+function nextQuestion() {
+  currentQuestionIndex++;
+  
+  if (currentQuestionIndex >= currentQuestions.length) {
+    completeLesson();
+  } else {
+    showQuestion();
+  }
+}
+
+function completeLesson() {
+  const lessonKey = `${currentLesson.unitIndex}-${currentLesson.lessonIndex}`;
+  userProgress.completedLessons[lessonKey] = true;
+  
+  const bonusXP = 50;
+  addXP(bonusXP);
+  userProgress.gems += 5;
+  saveProgress();
+  
+  const content = document.getElementById('lesson-content');
+  content.innerHTML = `
+    <div class="completion">
+      <div class="completion-icon">🎉</div>
+      <h2>Lesson Complete!</h2>
+      <div class="xp-earned">+${bonusXP + (currentQuestions.length * 10)} XP</div>
+      <p>You earned 5 gems! 💎</p>
+      <button class="continue-btn" onclick="returnToUnits()">CONTINUE</button>
+    </div>
+  `;
+}
+
+function returnToUnits() {
+  document.getElementById('lesson-view').classList.add('hidden');
+  document.getElementById('units-view').classList.remove('hidden');
+  renderUnits();
+}
+
+document.getElementById('back-btn').addEventListener('click', returnToUnits);
+
+function shuffleArray(array) {
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+}
+
+async function init() {
+  try {
+    // Load course data from course.json
+    const response = await fetch('course.json');
+    if (!response.ok) {
+      throw new Error('Failed to load course.json');
+    }
+    courseData = await response.json();
+    
+    loadProgress();
+    renderUnits();
+  } catch (error) {
+    console.error('Error loading course:', error);
+    document.getElementById('units').innerHTML = `
+      <div style="text-align: center; padding: 40px; color: #ff4b4b;">
+        <h2>⚠️ Could not load course data</h2>
+        <p>Please make sure course.json is in the same directory.</p>
+        <p style="font-size: 14px; color: #777; margin-top: 20px;">Error: ${error.message}</p>
+      </div>
+    `;
+  }
+}
+
+init();
+</script>
+
+</body>
+</html>
