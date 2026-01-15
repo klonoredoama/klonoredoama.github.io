@@ -446,6 +446,7 @@ body {
     </div>
   </div>
 
+  <!-- Level Progress -->
   <div class="level-progress">
     <div class="level-text">
       <span>Level <span id="level">1</span></span>
@@ -477,16 +478,35 @@ body {
 <div class="feedback" id="feedback"></div>
 
 <script>
+// ============================================
+// STORAGE MANAGER
+// ============================================
+// NOTE: This uses in-memory storage for Claude.ai
+// To enable persistent storage in your own environment:
+// 1. Uncomment the localStorage lines
+// 2. Comment out the memoryStorage lines
+
+const memoryStorage = {
+  data: {},
+  getItem(key) { return this.data[key] || null; },
+  setItem(key, value) { this.data[key] = value; },
+  removeItem(key) { delete this.data[key]; }
+};
 
 const storage = {
   get(key) {
-    return localStorage.getItem(key);
+    // return localStorage.getItem(key); // Use this in your own environment
+    return memoryStorage.getItem(key); // Current: in-memory only
   },
   set(key, value) {
-    localStorage.setItem(key, value);
+    // localStorage.setItem(key, value); // Use this in your own environment
+    memoryStorage.setItem(key, value); // Current: in-memory only
   }
 };
 
+// ============================================
+// USER PROGRESS DATA
+// ============================================
 let userProgress = {
   xp: 0,
   level: 1,
@@ -501,7 +521,37 @@ function loadProgress() {
   if (saved) {
     userProgress = JSON.parse(saved);
   }
+  updateStreak();
   updateHeader();
+}
+
+function updateStreak() {
+  const today = new Date().toDateString();
+  const lastStudy = userProgress.lastStudyDate;
+  
+  if (!lastStudy) {
+    // First time studying
+    userProgress.streak = 1;
+    userProgress.lastStudyDate = today;
+  } else if (lastStudy !== today) {
+    const lastDate = new Date(lastStudy);
+    const todayDate = new Date(today);
+    const diffTime = todayDate - lastDate;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 1) {
+      // Studied yesterday, increment streak
+      userProgress.streak++;
+      userProgress.lastStudyDate = today;
+    } else if (diffDays > 1) {
+      // Missed a day, reset streak
+      userProgress.streak = 1;
+      userProgress.lastStudyDate = today;
+    }
+    // If diffDays === 0, already studied today, no change
+  }
+  
+  saveProgress();
 }
 
 function saveProgress() {
@@ -537,8 +587,14 @@ function updateHeader() {
   document.getElementById('level-progress-fill').style.width = progress + '%';
 }
 
+// ============================================
+// COURSE DATA
+// ============================================
 let courseData = [];
 
+// ============================================
+// RENDER UNITS
+// ============================================
 function renderUnits() {
   const unitsDiv = document.getElementById('units');
   unitsDiv.innerHTML = '';
@@ -591,6 +647,9 @@ function renderUnits() {
   });
 }
 
+// ============================================
+// LESSON LOGIC
+// ============================================
 let currentLesson = null;
 let currentQuestions = [];
 let currentQuestionIndex = 0;
@@ -761,6 +820,9 @@ function completeLesson() {
   const lessonKey = `${currentLesson.unitIndex}-${currentLesson.lessonIndex}`;
   userProgress.completedLessons[lessonKey] = true;
   
+  // Update streak when completing a lesson
+  updateStreak();
+  
   const bonusXP = 50;
   addXP(bonusXP);
   userProgress.gems += 5;
@@ -773,9 +835,20 @@ function completeLesson() {
       <h2>Lesson Complete!</h2>
       <div class="xp-earned">+${bonusXP + (currentQuestions.length * 10)} XP</div>
       <p>You earned 5 gems! 💎</p>
+      ${getStreakMessage()}
       <button class="continue-btn" onclick="returnToUnits()">CONTINUE</button>
     </div>
   `;
+}
+
+function getStreakMessage() {
+  const today = new Date().toDateString();
+  const lastStudy = userProgress.lastStudyDate;
+  
+  if (lastStudy !== today) {
+    return `<p style="color: #ff9600; font-size: 20px; margin-top: 10px;">🔥 ${userProgress.streak} day streak!</p>`;
+  }
+  return '';
 }
 
 function returnToUnits() {
@@ -786,6 +859,9 @@ function returnToUnits() {
 
 document.getElementById('back-btn').addEventListener('click', returnToUnits);
 
+// ============================================
+// UTILITIES
+// ============================================
 function shuffleArray(array) {
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
@@ -795,6 +871,9 @@ function shuffleArray(array) {
   return newArray;
 }
 
+// ============================================
+// INITIALIZE
+// ============================================
 async function init() {
   try {
     // Load course data from course.json
