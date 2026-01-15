@@ -1,0 +1,370 @@
+[
+  {
+    "title": "Unit 1: Basics",
+    "lessons": [
+      {
+        "id": "u1l1",
+        "title": "Greetings",
+        "words": [
+          {"word": "ķalǒtǒn", "ipa": "/sæl.'u:.tu:n/", "pos": "int", "meaning": "greeting; hello"},
+          {"word": "adêâķ", "ipa": "/æd.'i:.eɪs/", "pos": "int", "meaning": "goodbye, farewell"},
+          {"word": "enkatêķ", "ipa": "/ɛn.kæ.'ti:s/", "pos": "int", "meaning": "nice to meet you"},
+          {"word": "pêrdǒ", "ipa": "/'pi:r.du:/", "pos": "v", "meaning": "pardon, excuse"},
+          {"word": "fovǒrâķ", "ipa": "/fɔ.'vu:r.eɪs/", "pos": "v", "meaning": "to hold favor with, to appreciate, to like"}
+        ]
+      },
+      {
+        "id": "u1l2",
+        "title": "Pronouns",
+        "words": [
+          {"word": "jo", "ipa": "/'jɔ/", "pos": "pro", "meaning": "first person singular pronoun"},
+          {"word": "jot", "ipa": "/'jɔt/", "pos": "pro", "meaning": "second person singular pronoun"},
+          {"word": "joķ", "ipa": "/'jɔs/", "pos": "pro", "meaning": "first person plural pronoun"},
+          {"word": "joteķ", "ipa": "/jɔt.'ɛs/", "pos": "pro", "meaning": "second person plural pronoun"},
+          {"word": "Ģelêr", "ipa": "/dʒɛ.'li:ɹ/", "pos": "pro", "meaning": "third person masculine"},
+          {"word": "Žâlêr", "ipa": "/'ʒeɪ.li:ɹ/", "pos": "pro", "meaning": "third person feminine"},
+          {"word": "âlêr", "ipa": "/'eɪ.ǀiːr/", "pos": "pro", "meaning": "third person neutral"}
+        ]
+      },
+      {
+        "id": "u1l3",
+        "title": "Helping Verbs",
+        "words": [
+          {"word": "ķǒ", "ipa": "/'su:/", "pos": "v", "meaning": "first person helping verb for 'to be'"},
+          {"word": "êroķ", "ipa": "/'i:r.ɔs/", "pos": "v", "meaning": "second person helping verb for 'to be'"},
+          {"word": "êķ", "ipa": "/'i:s/", "pos": "v", "meaning": "third person helping verb for 'to be'"}
+        ]
+      },
+      {
+        "id": "u1l4",
+        "title": "Possessives",
+        "words": [
+          {"word": "jon", "ipa": "/'jɔn/", "pos": "adj", "meaning": "first person possessive"},
+          {"word": "joten", "ipa": "/ˈjɔtɛn/", "pos": "adj", "meaning": "second person possessive"},
+          {"word": "Ģelên", "ipa": "/dʒɛl.ˈiːn/", "pos": "adj", "meaning": "third person masculine possessive"},
+          {"word": "Žâlon", "ipa": "/ˈʒeɪ.lɔn/", "pos": "adj", "meaning": "third person feminine possessive"},
+          {"word": "âlên", "ipa": "/'eɪ.liːn/", "pos": "adj", "meaning": "third person neutral possessive"}
+        ]
+      },
+      {
+        "id": "u1l5",
+        "title": "Common Words",
+        "words": [
+          {"word": "ķê", "ipa": "/'si:/", "pos": "particle", "meaning": "yes (positive answer/exclamation)"},
+          {"word": "nô", "ipa": "/'nu:/", "pos": "particle", "meaning": "negation, not, none, no"},
+          {"word": "tê", "ipa": "/'ti:/", "pos": "conj", "meaning": "and, also"},
+          {"word": "o", "ipa": "/ͻ/", "pos": "conj", "meaning": "but, however"},
+          {"word": "âdeķ", "ipa": "/'eɪ.dɛs/", "pos": "prep", "meaning": "here"},
+          {"word": "dâ", "ipa": "/'deɪ/", "pos": "prep", "meaning": "of, from, by"},
+          {"word": "pon", "ipa": "/pɔn/", "pos": "prep", "meaning": "on, above, attached to, mounted to, on the side of"}
+        ]
+      },
+      {
+        "id": "u1l6",
+        "title": "More Common Words",
+        "words": [
+          {"word": "ê­tê", "ipa": "/'i:.ti:/", "pos": "prep", "meaning": "this, that, those"},
+          {"word": "ûnê", "ipa": "/'ju:.ni:/", "pos": "adj", "meaning": "singular, one"},
+          {"word": "nǒgu", "ipa": "/'nu:.gʌ/", "pos": "adj", "meaning": "multiple, many"},
+          {"word": "onlê", "ipa": "/ͻn.'li:/", "pos": "adv", "meaning": "only, nothing more"},
+          {"word": "maģês", "ipa": "/mæ.'dʒi:s/", "pos": "adj", "meaning": "more, to a higher degree"},
+          {"word": "prot", "ipa": "/prɔt/", "pos": "prep", "meaning": "because of"}
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Unit 2: Nouns",
+    "lessons": [
+      {
+        "id": "u2l1",
+        "title": "People",
+        "words": [
+          {"word": "vên", "ipa": "/'vi:n/", "pos": "n", "meaning": "a human (gender neutral)"},
+          {"word": "ģelvên", "ipa": "/dʒɛl.'vi:n/", "pos": "n", "meaning": "a man"},
+          {"word": "žâlovên", "ipa": "/'ʒeɪ.lɔ.vi:n/", "pos": "n", "meaning": "a woman"},
+          {"word": "framînt", "ipa": "/'fræ.maɪnt/", "pos": "n", "meaning": "friend"},
+          {"word": "ķtǒdê", "ipa": "/'stu:.di:/", "pos": "n", "meaning": "a student"},
+          {"word": "nomâ", "ipa": "/nɔ.'meɪ/", "pos": "n", "meaning": "name"}
+        ]
+      },
+      {
+        "id": "u2l2",
+        "title": "Animals",
+        "words": [
+          {"word": "Enêoķe", "ipa": "/ɛn.'i:.ɔ.sɛ/", "pos": "n", "meaning": "raccoon"},
+          {"word": "hog", "ipa": "/'hɔg/", "pos": "n", "meaning": "hedgehog"},
+          {"word": "frogeķ", "ipa": "/frɔg.ɛs/", "pos": "n", "meaning": "frog"},
+          {"word": "žempênte", "ipa": "/ʒɛm.'pi:n.tɛ/", "pos": "n", "meaning": "snake"}
+        ]
+      },
+      {
+        "id": "u2l3",
+        "title": "Food",
+        "words": [
+          {"word": "mablâ", "ipa": "/mæb.'leɪ/", "pos": "n", "meaning": "apple"},
+          {"word": "pânêb", "ipa": "/'peɪ.ni:b/", "pos": "n", "meaning": "bread"},
+          {"word": "patżka", "ipa": "/pæt.ʃkæ/", "pos": "n", "meaning": "potato"},
+          {"word": "laktê", "ipa": "/læk.ti:/", "pos": "n", "meaning": "milk"},
+          {"word": "ķoķâ", "ipa": "/sɔ.'seɪ/", "pos": "n", "meaning": "cocoa"}
+        ]
+      },
+      {
+        "id": "u2l4",
+        "title": "Objects",
+        "words": [
+          {"word": "kǒpâ", "ipa": "/'ku:.pɛ/", "pos": "n", "meaning": "a cup; object one drinks from"},
+          {"word": "kapêu", "ipa": "/kæp.'i:.ʌ/", "pos": "n", "meaning": "paper"},
+          {"word": "ķlǒnor", "ipa": "/'slu:.nɔr/", "pos": "n", "meaning": "dictionary"},
+          {"word": "ǩǒldâ", "ipa": "/'sku:l.deɪ/", "pos": "n", "meaning": "a school"}
+        ]
+      },
+      {
+        "id": "u2l5",
+        "title": "Nature",
+        "words": [
+          {"word": "akvâ", "ipa": "/æk.'veɪ/", "pos": "n", "meaning": "water"},
+          {"word": "akvâgrân", "ipa": "/æk.'veɪ.greɪn/", "pos": "n", "meaning": "Ocean"},
+          {"word": "fêrgǒ", "ipa": "/'fi:r.gu:/", "pos": "n", "meaning": "fire"},
+          {"word": "tênal", "ipa": "/'ti:.næl/", "pos": "n", "meaning": "A planet"},
+          {"word": "lîtênal", "ipa": "/li:.ti:.næl/", "pos": "n", "meaning": "Moon"},
+          {"word": "lîlîtênal", "ipa": "/li:.li:.ti:.næl/", "pos": "n", "meaning": "Dwarf planet"}
+        ]
+      },
+      {
+        "id": "u2l6",
+        "title": "Places",
+        "words": [
+          {"word": "Erṫ", "ipa": "/ɛrθ/", "pos": "n", "meaning": "Earth"},
+          {"word": "ûnîķtâteķ", "ipa": "/'ju:.'nˈaɪ.steɪtɛs/", "pos": "n", "meaning": "United States"},
+          {"word": "ķlǒpu", "ipa": "/'slu:.pʌ/", "pos": "n", "meaning": "slope"}
+        ]
+      },
+      {
+        "id": "u2l7",
+        "title": "Body Parts",
+        "words": [
+          {"word": "extrǒ", "ipa": "/ɛks.'tru:/", "pos": "n", "meaning": "a limb"},
+          {"word": "extrǒhîķetâ", "ipa": "/ɛks.'tru:.haɪ.sɛ.tâ/", "pos": "n", "meaning": "head"},
+          {"word": "extrǒmedênu", "ipa": "/ɛks.'tru:.mɛd.i:.nʌ/", "pos": "n", "meaning": "an arm"},
+          {"word": "extrǒmedman", "ipa": "/ɛks.'tru:.mɛd.mæn/", "pos": "n", "meaning": "a hand"},
+          {"word": "extrǒmedmanêķetâ", "ipa": "/ɛks.'tru:.mɛd.mæn.i:.sɛt.eɪ/", "pos": "n", "meaning": "a finger"},
+          {"word": "extrǒman", "ipa": "/ɛks.'tru:.mæn/", "pos": "n", "meaning": "a foot / legs"},
+          {"word": "extrǒmanêķetâ", "ipa": "/ɛks.'tru:.mæn.i:.sɛt.eɪ/", "pos": "n", "meaning": "a toe"}
+        ]
+      },
+      {
+        "id": "u2l8",
+        "title": "Time & Abstract",
+        "words": [
+          {"word": "kronu", "ipa": "/kræ.nʌ/", "pos": "n", "meaning": "time"},
+          {"word": "dêja", "ipa": "/'di:.jæ/", "pos": "n", "meaning": "day"},
+          {"word": "nǒżâ", "ipa": "/'nu:.ʃeɪ/", "pos": "n", "meaning": "night"},
+          {"word": "êdǒâma", "ipa": "/'i:.du:.eɪ.mæ/", "pos": "n", "meaning": "language"},
+          {"word": "Têpereb", "ipa": "/'ti:.pɛr.ɛb/", "pos": "n", "meaning": "a drink"}
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Unit 3: Verbs",
+    "lessons": [
+      {
+        "id": "u3l1",
+        "title": "Basic Actions",
+        "words": [
+          {"word": "ķog", "ipa": "/sɔg/", "pos": "v", "meaning": "to leave or go"},
+          {"word": "mând", "ipa": "/meɪnd/", "pos": "v", "meaning": "to eat"},
+          {"word": "têperebâķ", "ipa": "/'ti:.pɛr.ɛb.eɪs/", "pos": "v", "meaning": "to drink"},
+          {"word": "dǒrmêķâķ", "ipa": "/'du:r.mi:.seɪs/", "pos": "v", "meaning": "to sleep, nap, or rest"},
+          {"word": "eķabâķ", "ipa": "/ɛs.æ.'beɪs/", "pos": "v", "meaning": "to write"}
+        ]
+      },
+      {
+        "id": "u3l2",
+        "title": "Learning & Thinking",
+        "words": [
+          {"word": "ķtǒdâķ", "ipa": "/'stu:.deɪs/", "pos": "v", "meaning": "to learn, study, or research"},
+          {"word": "razǒnâķ", "ipa": "/ræ.'zu:n.eɪs/", "pos": "v", "meaning": "to reason"},
+          {"word": "plârîvâķ", "ipa": "/'pleɪ.raɪv.eɪs/", "pos": "v", "meaning": "to plan"},
+          {"word": "krêdanâķ", "ipa": "/'kri:.dæn.eɪs/", "pos": "v", "meaning": "to create"}
+        ]
+      },
+      {
+        "id": "u3l3",
+        "title": "Feelings",
+        "words": [
+          {"word": "ênâķǒm", "ipa": "/'i:.neɪ.su:m/", "pos": "v", "meaning": "to feel (sentimental)"},
+          {"word": "fanâķǒm", "ipa": "/fæ.'neɪ.su:m/", "pos": "v", "meaning": "to feel (physical)"},
+          {"word": "ênâlêrâķ", "ipa": "/'i:.neɪ.li:r.eɪs/", "pos": "v", "meaning": "to feel empathy for"},
+          {"word": "epêvolâķ", "ipa": "/ɛp.'i:.vɔ.leɪs/", "pos": "v", "meaning": "to desire or want something"}
+        ]
+      },
+      {
+        "id": "u3l4",
+        "title": "Actions & Changes",
+        "words": [
+          {"word": "ģânâķ", "ipa": "/'dʒeɪn.eɪs/", "pos": "v", "meaning": "to change; to modify"},
+          {"word": "fêrgâķ", "ipa": "/'fi:r.geɪs/", "pos": "verb", "meaning": "Burning, to burn"},
+          {"word": "impaģâķ", "ipa": "/ɪm.pædʒ.eɪs/", "pos": "v", "meaning": "to damage"},
+          {"word": "ǩaloķâķ", "ipa": "/skæ.lɔ.seɪs/", "pos": "v", "meaning": "to make slippery"},
+          {"word": "trelķǒmâķ", "ipa": "/trɛl.'su:.meɪs/", "pos": "v", "meaning": "to go insane, to become deranged"}
+        ]
+      },
+      {
+        "id": "u3l5",
+        "title": "Unusual Verbs",
+        "words": [
+          {"word": "żǒkêarâķ", "ipa": "/'ʃu:.ki:.ær.eɪs/", "pos": "v", "meaning": "to suck"},
+          {"word": "tǒdâķ", "ipa": "/'tu:.deɪs/", "pos": "adj", "meaning": "should"}
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Unit 4: Adjectives & Adverbs",
+    "lessons": [
+      {
+        "id": "u4l1",
+        "title": "Colors",
+        "words": [
+          {"word": "rǒ", "ipa": "/'ru:/", "pos": "adj", "meaning": "red"},
+          {"word": "ażǒl", "ipa": "/æʃ.'u:l/", "pos": "adj", "meaning": "blue"},
+          {"word": "vêrdâ", "ipa": "/'vi:r.deɪ/", "pos": "adj", "meaning": "green"},
+          {"word": "âmar", "ipa": "/'eɪ.mær/", "pos": "adj", "meaning": "yellow"},
+          {"word": "orênģ", "ipa": "/ͻ.'ri:nʤ/", "pos": "adj", "meaning": "orange"},
+          {"word": "blânk", "ipa": "/bleɪnk/", "pos": "adj", "meaning": "white"},
+          {"word": "nǒker", "ipa": "/'nu:.kɛr/", "pos": "adj", "meaning": "black"}
+        ]
+      },
+      {
+        "id": "u4l2",
+        "title": "More Colors",
+        "words": [
+          {"word": "grê", "ipa": "/.gri:/", "pos": "adj", "meaning": "gray"},
+          {"word": "mârǒn", "ipa": "/'meɪ.ru:n/", "pos": "adj", "meaning": "brown"},
+          {"word": "rǒķa", "ipa": "/'ru:.sæ/", "pos": "adj", "meaning": "pink"},
+          {"word": "vêlât", "ipa": "/'vi:.leɪt/", "pos": "adj", "meaning": "violet"},
+          {"word": "lêla", "ipa": "/li:.læ/", "pos": "adj", "meaning": "lilac"},
+          {"word": "terkwîķ", "ipa": "/terk.'waɪs/", "pos": "adj", "meaning": "turquoise"}
+        ]
+      },
+      {
+        "id": "u4l3",
+        "title": "Size & Position",
+        "words": [
+          {"word": "grân", "ipa": "/'greɪn/", "pos": "adj", "meaning": "large"},
+          {"word": "lîlî", "ipa": "/li:.li:/", "pos": "adj", "meaning": "small"},
+          {"word": "hî", "ipa": "/'haɪ/", "pos": "adj", "meaning": "high"},
+          {"word": "hît", "ipa": "/'haɪt/", "pos": "adj", "meaning": "higher"},
+          {"word": "hîķetâ", "ipa": "/'haɪ.sɛ.tâ/", "pos": "adj", "meaning": "highest"},
+          {"word": "man", "ipa": "/mæn/", "pos": "adj", "meaning": "low"},
+          {"word": "manêt", "ipa": "/mæn.'i:t/", "pos": "adj", "meaning": "lower"}
+        ]
+      },
+      {
+        "id": "u4l4",
+        "title": "More Size & Position",
+        "words": [
+          {"word": "manêķetâ", "ipa": "/mæn.'i:.sɛt.eɪ/", "pos": "adj", "meaning": "lowest"},
+          {"word": "medênu", "ipa": "/mɛd.'i:.nʌ/", "pos": "adj", "meaning": "middle"},
+          {"word": "ķlǒpân", "ipa": "/'slu:.peɪn/", "pos": "adj", "meaning": "sloped"},
+          {"word": "jânep", "ipa": "/'jeɪ.nɛp/", "pos": "adj", "meaning": "full"}
+        ]
+      },
+      {
+        "id": "u4l5",
+        "title": "Descriptive",
+        "words": [
+          {"word": "fǒkażhog", "ipa": "/'fu:k.æs.hɔg/", "pos": "adj", "meaning": "good"},
+          {"word": "êmed", "ipa": "/i:.'mɛd/", "pos": "adj", "meaning": "pretty, beautiful, visually pleasing"},
+          {"word": "mîldo", "ipa": "/'mi:l.dɔ/", "pos": "adj", "meaning": "cute, adorable"},
+          {"word": "prǒtjont", "ipa": "/'pru:t.jɔnt/", "pos": "adj", "meaning": "creepy, scary"},
+          {"word": "blâtunân", "ipa": "/'bleɪ.tʌn.eɪn/", "pos": "adj", "meaning": "blatant, obvious"},
+          {"word": "ķexê", "ipa": "/sɛk.'si:/", "pos": "adj", "meaning": "sexually appealing"}
+        ]
+      },
+      {
+        "id": "u4l6",
+        "title": "States",
+        "words": [
+          {"word": "ǩaloķǒ", "ipa": "/skæ.lɔ.'su:/", "pos": "adj", "meaning": "slippery; difficult to hold firmly due to wetness/sliminess"},
+          {"word": "fêrgân", "ipa": "/'fi:r.geɪn/", "pos": "adj", "meaning": "Fiery"},
+          {"word": "dǒrmêķân", "ipa": "/'du:r.mi:.seɪn/", "pos": "adj", "meaning": "asleep, napping, resting, dormant"},
+          {"word": "trelķǒm", "ipa": "/trɛl.'su:m/", "pos": "adj", "meaning": "crazy, deranged"},
+          {"word": "krêdanân", "ipa": "/'kri:.dæn.eɪn/", "pos": "adj", "meaning": "artificial"}
+        ]
+      },
+      {
+        "id": "u4l7",
+        "title": "Gender & More",
+        "words": [
+          {"word": "Ģel", "ipa": "/dʒel/", "pos": "adj", "meaning": "masculine"},
+          {"word": "Žâlo", "ipa": "/'ʒeɪ.lɔ/", "pos": "adj", "meaning": "feminine"},
+          {"word": "eķabân", "ipa": "/ɛs.æ.'beɪs/", "pos": "n", "meaning": "written"},
+          {"word": "impaģân", "ipa": "/ɪm.pædʒ.eɪn/", "pos": "adj", "meaning": "damaged"},
+          {"word": "plârîvân", "ipa": "/'pleɪ.raɪv.eɪn/", "pos": "adj", "meaning": "planned"},
+          {"word": "ênâlêrân", "ipa": "/'i:.neɪ.li:r.eɪn/", "pos": "adj", "meaning": "empathetic"}
+        ]
+      },
+      {
+        "id": "u4l8",
+        "title": "Adverbs",
+        "words": [
+          {"word": "êntêonân", "ipa": "/'i:n.ti:.ɔn.eɪn/", "pos": "adv", "meaning": "with the intent of"}
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Unit 5: Advanced",
+    "lessons": [
+      {
+        "id": "u5l1",
+        "title": "Abstract Nouns",
+        "words": [
+          {"word": "ģân", "ipa": "/'dʒeɪn/", "pos": "n", "meaning": "change"},
+          {"word": "razǒn", "ipa": "/ræ.'zu:n/", "pos": "n", "meaning": "reason"},
+          {"word": "ênâlêr", "ipa": "/'i:.neɪ.li:r/", "pos": "n", "meaning": "empathy"},
+          {"word": "ê­nêmo", "ipa": "/'i:.ni:.mɔ/", "pos": "n", "meaning": "mystery, enigma"},
+          {"word": "êntêon", "ipa": "/'i:n.ti:.ɔn/", "pos": "n", "meaning": "intent, willingness, eagerness, purpose"},
+          {"word": "epêvolǒ", "ipa": "/ɛp.'i:.vɔl.u:/", "pos": "n", "meaning": "a desire, wish, or want"}
+        ]
+      },
+      {
+        "id": "u5l2",
+        "title": "Complex Nouns",
+        "words": [
+          {"word": "dǒrmêķ", "ipa": "/'du:r.mi:s/", "pos": "n", "meaning": "a sleep, nap, or rest"},
+          {"word": "eķabê", "ipa": "/ɛs.æ.'bi:/", "pos": "n", "meaning": "writing"},
+          {"word": "krêdan", "ipa": "/'kri:.dæn/", "pos": "n", "meaning": "creation, something artificial"},
+          {"word": "plârîv", "ipa": "/'pleɪ.raɪv/", "pos": "n", "meaning": "a plan"},
+          {"word": "impaģ", "ipa": "/ɪm.pædʒ/", "pos": "n", "meaning": "something that damages something else"},
+          {"word": "fovǒr", "ipa": "/fɔ.'vu:r/", "pos": "n", "meaning": "favor for, appreciation"}
+        ]
+      },
+      {
+        "id": "u5l3",
+        "title": "Misc Nouns",
+        "words": [
+          {"word": "poķê", "ipa": "/pɔ.'si:/", "pos": "n", "meaning": "position"},
+          {"word": "êtor", "ipa": "/'i:.tʌr/", "pos": "n", "meaning": "rate"}
+        ]
+      },
+      {
+        "id": "u5l4",
+        "title": "Special Adjectives",
+        "words": [
+          {"word": "ê­nêmoķ", "ipa": "/'i:.ni:.mɔs/", "pos": "adj", "meaning": "mysterious, enigmatic"}
+        ]
+      },
+      {
+        "id": "u5l5",
+        "title": "Insults",
+        "words": [
+          {"word": "żǒkêpênte", "ipa": "/'ʃu:.ki:.pi:n.tɛ/", "pos": "n", "meaning": "snake sucker (insult)"}
+        ]
+      }
+    ]
+  }
+]
