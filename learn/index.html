@@ -479,28 +479,33 @@ body {
 
 <script>
 // ============================================
-// STORAGE MANAGER
+// STORAGE MANAGER (Using Cookies)
 // ============================================
-// NOTE: This uses in-memory storage for Claude.ai
-// To enable persistent storage in your own environment:
-// 1. Uncomment the localStorage lines
-// 2. Comment out the memoryStorage lines
-
-const memoryStorage = {
-  data: {},
-  getItem(key) { return this.data[key] || null; },
-  setItem(key, value) { this.data[key] = value; },
-  removeItem(key) { delete this.data[key]; }
-};
-
 const storage = {
   get(key) {
-    // return localStorage.getItem(key); // Use this in your own environment
-    return memoryStorage.getItem(key); // Current: in-memory only
+    const name = key + "=";
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookieArray = decodedCookie.split(';');
+    
+    for (let i = 0; i < cookieArray.length; i++) {
+      let cookie = cookieArray[i].trim();
+      if (cookie.indexOf(name) === 0) {
+        return cookie.substring(name.length, cookie.length);
+      }
+    }
+    return null;
   },
+  
   set(key, value) {
-    // localStorage.setItem(key, value); // Use this in your own environment
-    memoryStorage.setItem(key, value); // Current: in-memory only
+    // Set cookie to expire in 365 days
+    const date = new Date();
+    date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000));
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = key + "=" + value + ";" + expires + ";path=/";
+  },
+  
+  remove(key) {
+    document.cookie = key + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/";
   }
 };
 
