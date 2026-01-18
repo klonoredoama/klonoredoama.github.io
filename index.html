@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <img src="flag.png" alt="êde flag" class="flag-icon">
     <title>êde Dictionary</title>
     <style>
         :root {
@@ -13,18 +14,17 @@
         }
         body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
         .container { max-width: 900px; margin: 0 auto; }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 600px;
-            height: 400px;
-            background: url('flag.png') center/contain no-repeat;
-            opacity: 0.03;
-            z-index: -1;
-            pointer-events: none;
+        header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .flag-icon {
+            width: 60px;
+            height: 40px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
         .top-bar {
             position: fixed;
