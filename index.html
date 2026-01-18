@@ -164,9 +164,6 @@
         <label for="langSelect">Language:</label>
         <select id="langSelect">
             <option value="en">English</option>
-            <option value="es">Español</option>
-            <option value="fr">Français</option>
-            <option value="de">Dutch</option>
         </select>
     </div>
 </div>
@@ -179,7 +176,6 @@
             <option value="all">All Parts of Speech</option>
         </select>
         <div class="stats" id="stats">Total Words: 0</div>
-        <div><p>Non-English translation made using Claude AI</p></div>
         <button onclick="window.location.href='êde.pdf'">Documentation</button>
     </div>
 
@@ -192,10 +188,7 @@
 
     // Language file configuration
     const languageFiles = {
-        'en': 'dictionary-en.json',
-        'es': 'dictionary-es.json',
-        'fr': 'dictionary-fr.json',
-        'de': 'dictionary-de.json'
+        'en': 'dictionary-en.json'
     };
 
     function normalize(str) {
