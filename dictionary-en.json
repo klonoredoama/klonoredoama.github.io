@@ -150,5 +150,8 @@
       "akvâgrân": { "ipa": "/æk.'veɪ.greɪn/", "pos": "n", "meaning": "Ocean" },
       "krêdanân": { "ipa": "/'kri:.dæn.eɪn/", "pos": "adj", "meaning": "artificial" },
       "nomâķ": { "ipa": "/nɔ.meɪs/", "pos": "v", "meaning": "to give a name to" },
+      "kâlêr": { "ipa": "/keɪ.li:r/", "pos": "pro", "meaning": "third person singular inanimate pronoun" },
+      "kâlêķ": { "ipa": "/keɪ.li:s/", "pos": "pro", "meaning": "third person plural inanimate pronoun" },
+      "kâlên": { "ipa": "/keɪ.li:n/", "pos": "adj", "meaning": "third person inanimate possessive" },
       "żǒkêpênte": { "ipa": "/’ʃu:.ki:.pi:n.tɛ/", "pos": "n", "meaning": "snake sucker (insult)" }
     }
