@@ -98,7 +98,7 @@
       "mârǒn": { "ipa": "/’meɪ.ru:n/", "pos": "adj", "meaning": "brown" },
       "medênu": { "ipa": "/mɛd.’i:.nʌ/", "pos": "adj", "meaning": "middle" },
       "mîldo": { "ipa": "/’mi:l.dɔ/", "pos": "adj", "meaning": "cute, adorable" },
-      "nô": { "ipa": "/’nu:/", "pos": "particle", "meaning": "negation, not, none, no" },
+      "nô": { "ipa": "/’noʊ/", "pos": "particle", "meaning": "negation, not, none, no" },
       "nǒgu": { "ipa": "/’nu:.gʌ/", "pos": "adj", "meaning": "multiple, many" },
       "nomâ": { "ipa": "/nɔ.’meɪ/", "pos": "n", "meaning": "name" },
       "nǒker": { "ipa": "/’nu:.kɛr/", "pos": "adj", "meaning": "black" },
@@ -169,5 +169,12 @@
       "ǩrat": { "ipa": "/skreɪt/", "pos": "adj, n", "meaning": "three" },
       "rât": { "ipa": "/'reɪt/", "pos": "adj, n", "meaning": "four" },
       "pedê": { "ipa": "/pɛd.di:/", "pos": "adj, n", "meaning": "five" },
+      "ķâtê": { "ipa": "/seɪ.ti:/", "pos": "adj, n", "meaning": "six" },
+      "rǒbon": { "ipa": "/'ru:bɔn/", "pos": "adj, n", "meaning": "seven" },
+      "kat": { "ipa": "/kæt/", "pos": "adj, n", "meaning": "eight" },
+      "zôn": { "ipa": "/zoʊn/", "pos": "adj, n", "meaning": "nine" },
+      "krâ": { "ipa": "/kreɪ/", "pos": "adj, n", "meaning": "ten" },
+      "lâ": { "ipa": "/leɪ/", "pos": "adj", "meaning": "adds one digit to the number it modifies\nexample: 'kǒd lâ'='twenty'/'20'\nthere cannot be more than 3 per number, afterwards it switches to lî" },
+      "lî": { "ipa": "/laɪ/", "pos": "adj", "meaning": "adds 5 digits to the number it modifies\nexample:\n'kǒd lî'='two hundred thousand'/'200,000'\n'kǒd lî lâ'='two million'/'2,000,000'" },
       "żǒkêpênte": { "ipa": "/’ʃu:.ki:.pi:n.tɛ/", "pos": "n", "meaning": "snake sucker (insult)" }
     }
