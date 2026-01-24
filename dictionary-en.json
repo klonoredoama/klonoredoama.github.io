@@ -176,5 +176,18 @@
       "krâ": { "ipa": "/kreɪ/", "pos": "adj, n", "meaning": "ten" },
       "lâ": { "ipa": "/leɪ/", "pos": "adj", "meaning": "adds one digit to the number it modifies\nexample: 'kǒd lâ'='twenty'/'20'\nthere cannot be more than 3 per number, afterwards it switches to lî" },
       "lî": { "ipa": "/laɪ/", "pos": "adj", "meaning": "adds 5 digits to the number it modifies\nexample:\n'kǒd lî'='two hundred thousand'/'200,000'\n'kǒd lî lâ'='two million'/'2,000,000'" },
+      "ķêķâķ": { "ipa": "/'si:.seɪs/", "pos": "v", "meaning": "speak" },
+      "ên": { "ipa": "/'i:n/", "pos": "prep", "meaning": "inside" },
+      "epêdôvân": { "ipa": "/'ɛ.pi:.doʊ.veɪn/", "pos": "adj", "meaning": "sleepy" },
+      "ķêķânên": { "ipa": "/'si:.seɪ.ni:n/", "pos": "v", "meaning": "think" },
+      "drêr": { "ipa": "/'dri:r/", "pos": "adj", "meaning": "dreary, dull, bleak" },
+      "nǒżâmed": { "ipa": "/'nu:.ʃeɪ.mɛd/", "pos": "n", "meaning": "midnight" },
+      "krorênǒ": { "ipa": "/krɔr.'i:.nu:/", "pos": "prep", "meaning": "during, while" },
+      "bǎt": { "ipa": "/baʊt/", "pos": "prep", "meaning": "about" },
+      "dêbilitê": { "ipa": "/di:.bɪl.ɪ.ti:/", "pos": "adj", "meaning": "weak" },
+      "bêrnôk": { "ipa": "/bi:r.noʊk/", "pos": "n", "meaning": "raven" },
+      "bêrd": { "ipa": "/bi:rd/", "pos": "n", "meaning": "bird" },
+      "framân": { "ipa": "/fræ.meɪn/", "pos": "adj", "meaning": "friendly" },
+      "framâķ": { "ipa": "/fræ.meɪs/", "pos": "v", "meaning": "to be friendly" },
       "żǒkêpênte": { "ipa": "/’ʃu:.ki:.pi:n.tɛ/", "pos": "n", "meaning": "snake sucker (insult)" }
     }
