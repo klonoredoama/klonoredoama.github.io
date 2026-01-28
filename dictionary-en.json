@@ -199,6 +199,12 @@
       "dǒrlîķâķ": { "ipa": "/'du:r.laɪ.seɪs/", "pos": "v", "meaning": "to drowse, fall asleep gently, to 'nod off'" },
       "dǒrlînân": { "ipa": "/'du:r.laɪ.neɪsn/", "pos": "adj", "meaning": "drowsy, sleepy" },
       "adlî": { "ipa": "/æd.'laɪ/", "pos": "prep, adj", "meaning": "close to, nearly" },
-      "adlîķâķ": { "ipa": "/'du:r.laɪ.neɪsn/", "pos": "v", "meaning": "to come nearer" },
+      "adlîķâķ": { "ipa": "/æd.'laɪ.seɪs/", "pos": "v", "meaning": "to come nearer" },
+      "ķǒblî": { "ipa": "/'su:.blaɪ/", "pos": "adv", "meaning": "suddenly, quickly" },
+      "odkê": { "ipa": "/ɔd.'ki:/", "pos": "n", "meaning": "the sense of hearing" },
+      "odkêķâķ": { "ipa": "/ɔd.'ki:.seɪs/", "pos": "v", "meaning": "to hear" },
+      "odnok": { "ipa": "/ɔd.nɔk/", "pos": "n", "meaning": "knocking; as in on a door" },
+      "odnokôķâķ": { "ipa": "/ɔd.nɔk.'oʊ.seɪs/", "pos": "v", "meaning": "to knock; as in on a door" },
+      "ķêmu": { "ipa": "/si:.mʌ/", "pos": "adj", "meaning": "similar" },
       "żǒkêpênte": { "ipa": "/’ʃu:.ki:.pi:n.tɛ/", "pos": "n", "meaning": "snake sucker (insult)" }
     }
